@@ -11,3 +11,11 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 + :heavy_check_mark: ResNet50
 + :x: MobileNet_v2
 + :x: Inception_v3
+
+### Results
+|Model name|Set|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|---|
+|resnet50|First|98.96%|83.88%|12-01-2021|1|100|0.001|None|
+|resnet50|First|98.52%|81.82%|13-01-2021|1|100|0.001|None|
+|resnet50|First|99.68%|78.29%|14-01-2021|1|100|0.001|None|
+|resnet50|Second|99.68%|76.85%|15-01-2021|2|100|0.0001|0.5|
