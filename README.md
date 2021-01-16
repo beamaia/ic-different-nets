@@ -13,10 +13,36 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 + :x: Inception_v3
 
 ### Results
-|Model|Set|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
-|---|---|---|---|---|---|---|---|---|
-|resnet50|First|98.96%|83.88%|12-01-2021|1|100|0.001|None|
-|resnet50|First|98.52%|81.82%|13-01-2021|1|100|0.001|None|
-|resnet50|First|99.68%|78.29%|14-01-2021|1|100|0.001|None|
-|resnet50|Second|99.56%|77.23%|15-01-2021|1|100|0.0001|None|
-|resnet50|Second|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
+#### First Set
+
+|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|
+|resnet50|98.96%|83.88%|12-01-2021|1|100|0.001|None|
+|resnet50|98.52%|81.82%|13-01-2021|1|100|0.001|None|
+|resnet50|99.68%|78.29%|14-01-2021|1|100|0.001|None|
+|resnet50|99.68%|82.91%|15-01-2021|3|100|0.0001|0.2|
+|resnet50|99.37%|83.33%|15-01-2021|4|100|0.0001|0.2|
+
+#### Second Set
+
+|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|
+|resnet50|99.56%|77.23%|15-01-2021|1|100|0.0001|None|
+|resnet50|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
+|resnet50|99.63%|76.12%|16-01-2021|1|100|0.0001|0.2|
+
+#### Both Sets
+
+|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|
+|resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2|
+
+Key:
++ Model: name of the model used;
++ Train Accuracy: accuracy of the last epoch while training;
++ Test Accuracy: accuracy while testing;
++ Date: date the model was trained;
++ Version: training attempt number for that model on that day;
++ Epoch: number of epochs used;
++ LR: learning rate used (fixed);
++ Dropout: value if dropout layer was added, or "None" if wasn't used.
