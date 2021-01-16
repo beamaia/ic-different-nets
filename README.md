@@ -18,4 +18,5 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 |resnet50|First|98.96%|83.88%|12-01-2021|1|100|0.001|None|
 |resnet50|First|98.52%|81.82%|13-01-2021|1|100|0.001|None|
 |resnet50|First|99.68%|78.29%|14-01-2021|1|100|0.001|None|
+|resnet50|Second|99.56%|77.23%|15-01-2021|1|100|0.0001|0.5|
 |resnet50|Second|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
