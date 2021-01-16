@@ -20,7 +20,7 @@ def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
     if home:
         PATH_ini = ".././data/oralCancer-Borooah/"
     elif Hinton:
-        PATH_ini = "./home/Desktop/Humberto/data/"
+        PATH_ini = "/home/hinton/Desktop/Humberto/"
     else:
         PATH_ini = "./data/oralCancer-Borooah/"
 

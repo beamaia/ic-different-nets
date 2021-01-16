@@ -27,8 +27,18 @@ def get_info():
     model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
     date = input("Date:\n")
     version = int(input("Version:\n"))
-    hinton = bool(input("Hinton:\n"))
-    bea = bool(input("Bea:\n"))
+
+    hinton = (input("Hinton:\n"))
+    if hinton == "True":
+        hinton = True
+    else:
+        hinton = False
+
+    bea = (input("Bea:\n"))
+    if bea == "True":
+        bea = True
+    else:
+        bea = False
 
     system("clear")
     return first_set, both_sets, epochs, lr, sets, dp, model_name, date, version, hinton, bea
@@ -56,12 +66,6 @@ def main():
     'num_epochs': epochs,
     'lr': lr
     }
-
-    # info 
-    # change here
-    # model_name = "resnet50"
-    # date = "15-01-2020"
-    # version = 3
     
     if model_name == "resnet50":
         model = models.resnet50(pretrained=True)
