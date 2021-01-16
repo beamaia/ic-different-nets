@@ -13,7 +13,7 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 + :x: Inception_v3
 
 ### Results
-|Model name|Set|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|Model|Set|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|---|
 |resnet50|First|98.96%|83.88%|12-01-2021|1|100|0.001|None|
 |resnet50|First|98.52%|81.82%|13-01-2021|1|100|0.001|None|

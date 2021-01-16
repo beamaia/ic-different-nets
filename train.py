@@ -95,7 +95,7 @@ def train (model, train_loader, val_loader, num_epochs, lr):
     return train_accuracies, train_losses, val_accuracies, val_losses, y_predict
 
 def test(model, test_loader):
-    print("Staring test...")
+    print("Starting test...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     model.eval()
