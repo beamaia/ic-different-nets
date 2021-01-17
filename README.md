@@ -8,11 +8,14 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 
 ## Neural Networks studied:
 
-+ :heavy_check_mark: ResNet50
++ :o: ResNet50
 + :x: MobileNet_v2
 + :x: Inception_v3
 
 ### Results
+
+Results are ordered by date and divided by sets used.
+
 #### First Set
 
 |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
@@ -22,6 +25,8 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 |resnet50|99.68%|78.29%|14-01-2021|1|100|0.001|None|
 |resnet50|99.68%|82.91%|15-01-2021|3|100|0.0001|0.2|
 |resnet50|99.37%|83.33%|15-01-2021|4|100|0.0001|0.2|
+|resnet50|99.76%|85.14%|16-01-2021|3|100|0.0001|0.5|
+|resnet50|99.56%|85.86%|16-01-2021|4|100|0.0001|0.5|
 
 #### Second Set
 
@@ -30,12 +35,15 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 |resnet50|99.56%|77.23%|15-01-2021|1|100|0.0001|None|
 |resnet50|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
 |resnet50|99.63%|76.12%|16-01-2021|1|100|0.0001|0.2|
+|resnet50|99.73%|76.31%|16-01-2021|5|100|0.0001|0.2|
+<!-- |resnet50|%|%|16-01-2021|7|100|0.0001|0.5| -->
 
 #### Both Sets
 
 |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|
 |resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2|
+<!-- |resnet50|%|%|16-01-2021|6|100|0.0001|0.2| -->
 
 Key:
 + Model: name of the model used;
