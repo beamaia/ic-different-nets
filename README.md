@@ -14,7 +14,7 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 
 ### Results
 
-Results are ordered by date and divided by sets used.
+Results are ordered by dropout rate and divided by sets used.
 
 #### First Set
 
@@ -33,9 +33,9 @@ Results are ordered by date and divided by sets used.
 |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|
 |resnet50|99.56%|77.23%|15-01-2021|1|100|0.0001|None|
-|resnet50|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
 |resnet50|99.63%|76.12%|16-01-2021|1|100|0.0001|0.2|
 |resnet50|99.73%|76.31%|16-01-2021|5|100|0.0001|0.2|
+|resnet50|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
 |resnet50|99.66%|65.33%|16-01-2021|7|100|0.0001|0.5|
 
 #### Both Sets
