@@ -4,7 +4,7 @@ This repository contains a study on different popular convolutional neural netwo
 
 We'll be using the [histopathological imaging database for oral cancer analysis](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6994517/) from Ayursundra Healthcare Pvt e Dr. B. Borooah Cancer Research Institute. 
 
-At first, we will be using the First Set, composed of 528 images in 100x magnification, where 89 are images with no abnormalities and 439 images are of Oral Squamous Cell Carcinoma (OSCC). Afterwards, we will test the Second Set, composed of 696 images in 400x magnification, where 201 are images with no abnormalities and 495 images are of OSCC. And finally, we will test both sets together. Our data is divided into 70% for training, 15% for validation and 15% for testing.
+At first, we will be using the First Set, composed of 528 images in 100x magnification, where 89 are images with no abnormalities and 439 images are of Oral Squamous Cell Carcinoma (OSCC). Afterwards, we will test the Second Set, composed of 696 images in 400x magnification, where 201 are images with no abnormalities and 495 images are of OSCC. And finally, we will test both sets together.
 
 ## Neural Networks studied:
 
@@ -14,7 +14,9 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 
 ### Results
 
-Results are ordered by dropout rate and divided by sets used.
+Results are ordered by dropout rate and number of epochs, and divided by sets used. 
+
+For data divided into 70% for training, 15% for validation and 15% for testing:
 
 #### First Set
 
@@ -44,6 +46,9 @@ Results are ordered by dropout rate and divided by sets used.
 |---|---|---|---|---|---|---|---|
 |resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2|
 |resnet50|99.43%|77.74%|16-01-2021|6|100|0.0001|0.2|
+|resnet50|99.44%|74.73%|18-01-2021|1|100|0.0001|0.5|
+
+For data divided into 80% for training, 10% for validation and 10% for testing:
 
 Key:
 + Model: name of the model used;

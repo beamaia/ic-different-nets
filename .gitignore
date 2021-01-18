@@ -5,3 +5,4 @@ inputs
 script.sh
 oralCancer-Borooah-resnet50.ipynb
 saved_models
+input_measure
