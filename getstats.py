@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt  
 import pandas as pd
 
-from sklearn import metrics
+from sklearn import metrics, svm
 from sklearn.utils.class_weight import compute_sample_weight
 
 import sys
@@ -93,7 +93,7 @@ def get_stats():
     precisions = []
     recalls = []
     f1_scores = []
-    auc_scores = []
+    # auc_scores = []
     accuracies = []
     sets = []
 
@@ -110,6 +110,10 @@ def get_stats():
         y_pred = np.loadtxt(pred_path)
         y_true = np.loadtxt(true_path)
 
+        # y_true1 = np.count_nonzero(y_true)
+        # y_true0 = len(y_true) - y_true1
+        # weights = compute_sample_weight({1:y_true1, 0: y_true0}, y_true)
+  
         tn, fp, fn, tp = metrics.confusion_matrix(y_true, y_pred).ravel()
 
         tn_list.append(tn)
@@ -117,16 +121,16 @@ def get_stats():
         fn_list.append(fn)
         fp_list.append(fp)
 
-
         precision = metrics.precision_score(y_true, y_pred)
         recall = metrics.recall_score(y_true, y_pred)
         f1 = metrics.f1_score(y_true, y_pred)
-        auc = metrics.roc_auc_score(y_true, y_pred)
+
+        # auc = metrics.roc_auc_score(y_true, y_pred, sample_weight=weights)
 
         precisions.append(precision)
         recalls.append(recall)
         f1_scores.append(f1)
-        auc_scores.append(auc)
+        # auc_scores.append(auc)
 
     tn_list = np.array(tn_list)
     tp_list = np.array(tp_list)
@@ -135,7 +139,7 @@ def get_stats():
     precisions = np.array(precisions)
     recalls = np.array(recalls)
     f1_scores = np.array(f1_scores)
-    auc_scores = np.array(auc_scores)
+    # auc_scores = np.array(auc_scores)
     accuracies = np.array(accuracies)
     sets = np.array(sets)
 
@@ -146,8 +150,8 @@ def get_stats():
              "Accuracy": accuracies, 
              "Precision": precisions,
              "Recall": recalls,
-             "F1": f1_scores,
-             "AUC": auc_scores}
+             "F1": f1_scores}
+            #  "AUC": auc_scores}
 
     dict_pos_neg = {"Model": models, 
              "Date": dates,
