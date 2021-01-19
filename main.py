@@ -49,28 +49,40 @@ def main():
     # images
     print("Processing images...")
 
-    if both_sets:
-        images_normal100, images_carcinoma100, images_normal400, images_carcinoma400  = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
-        x_normal100 = dt.process_images(images_normal100)
-        x_carcinoma100 = dt.process_images(images_carcinoma100)
-        images100, labels100 = dt.create_images_labels(x_normal100, x_carcinoma100)
-        (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images100, labels100, 0.3)
+    # if both_sets:
+    #     images_normal100, images_carcinoma100, images_normal400, images_carcinoma400  = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
+    #     x_normal100 = dt.process_images(images_normal100)
+    #     x_carcinoma100 = dt.process_images(images_carcinoma100)
+    #     images100, labels100 = dt.create_images_labels(x_normal100, x_carcinoma100)
+    #     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images100, labels100, 0.3)
 
-        # dataloaders
-        train_loader100, val_loader100, test_loader100 = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
-        #unfinished 
-    else:
-        images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
-        x_normal = dt.process_images(images_normal)
-        x_carcinoma = dt.process_images(images_carcinoma)
-        images, labels = dt.create_images_labels(x_normal, x_carcinoma)
+    #     # dataloaders
+    #     train_loader100, val_loader100, test_loader100 = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
+    #     #unfinished 
+    # else:
+    #     images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
+    #     x_normal = dt.process_images(images_normal)
+    #     x_carcinoma = dt.process_images(images_carcinoma)
+    #     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
-        print("Creating train, validation and test images...")
-        # split
-        (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.3)
+    #     print("Creating train, validation and test images...")
+    #     # split
+    #     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.3)
 
-        # dataloaders
-        train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
+    #     # dataloaders
+    #     train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
+
+    images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
+    x_normal = dt.process_images(images_normal)
+    x_carcinoma = dt.process_images(images_carcinoma)
+    images, labels = dt.create_images_labels(x_normal, x_carcinoma)
+
+    print("Creating train, validation and test images...")
+    # split
+    (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
+
+    # dataloaders
+    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
 
     print("Configuring model...",end="\n\n")
     params = {
