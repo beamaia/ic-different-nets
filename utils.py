@@ -72,6 +72,7 @@ def calculate_true_false_results (y_test, y_predict):
 
     return df_amount, df_percentage, masks
 
+def save_y_true_predict()
 
 def save_dataframes (y_test, y_test_predict, model_name, date, version=1):
     y_predict = []
@@ -86,11 +87,11 @@ def save_dataframes (y_test, y_test_predict, model_name, date, version=1):
     PATH_percentage = "./dataframes/TP-FN_percentage_" + PATH + ".csv"
     PATH_yt = "./y_predict/y_test_" + PATH + ".txt"
     PATH_yp = "./y_predict/y_predict_" + PATH + ".txt"
-    PATH_mask = "./y_predict/" + PATH + ".csv"
+    # PATH_mask = "./y_predict/" + PATH + ".csv"
 
     df_amount.to_csv(PATH_amount,index=True)
     df_percentage.to_csv(PATH_percentage,index=True)
-    masks.to_csv(PATH_mask, index=True)
+    # masks.to_csv(PATH_mask, index=True)
 
     np.savetxt(PATH_yp, y_predict, delimiter=",")
     np.savetxt(PATH_yt,y_test, delimiter=",")
