@@ -107,6 +107,7 @@ def main():
     train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, train_loader, val_loader, **params)
 
     print("Saving training data...", end="\n\n")
+    
     # transforming into np.array
     array_train_accuracies = np.asarray(train_accuracies)
     array_train_losses = np.asarray(train_losses)
