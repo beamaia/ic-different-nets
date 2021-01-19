@@ -104,7 +104,7 @@ def get_stats():
         models.append(model)
         dates.append(date)
         versions.append(version)
-        accuracies.append(float(accuracy)/100)
+        accuracies.append(float(accuracy))
         sets.append(set_used)
 
         y_pred = np.loadtxt(pred_path)
