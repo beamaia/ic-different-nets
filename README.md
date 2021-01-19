@@ -39,6 +39,7 @@ For data divided into 70% for training, 15% for validation and 15% for testing:
 |resnet50|99.73%|76.31%|16-01-2021|5|100|0.0001|0.2|
 |resnet50|99.47%|76.85%|15-01-2021|2|100|0.0001|0.5|
 |resnet50|99.66%|65.33%|16-01-2021|7|100|0.0001|0.5|
+|resnet50|99.51%|77.46%|19-01-2021|1|100|0.0001|0.5|
 
 #### Both Sets
 
@@ -47,8 +48,11 @@ For data divided into 70% for training, 15% for validation and 15% for testing:
 |resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2|
 |resnet50|99.43%|77.74%|16-01-2021|6|100|0.0001|0.2|
 |resnet50|99.44%|74.73%|18-01-2021|1|100|0.0001|0.5|
+|resnet50|99.56%|77.07%|19-01-2021|2|100|0.0001|0.5|
 
-For data divided into 80% for training, 10% for validation and 10% for testing:
+|resnet50|99.42%|79.58%|19-01-2021|3|100|0.0001|None|
+
+<!-- For data divided into 80% for training, 10% for validation and 10% for testing: -->
 
 Key:
 + Model: name of the model used;
