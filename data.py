@@ -45,9 +45,9 @@ def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
         images_normal400 = glob(PATH_normal400)
         images_carcinoma400 = glob(PATH_carcinoma400)
 
-        images_normal = images_normal100 + images_normal400
-        images_carcinoma = images_carcinoma100 + images_carcinoma400
-
+        # images_normal = images_normal100 + images_normal400
+        # images_carcinoma = images_carcinoma100 + images_carcinoma400
+        return images_normal100, images_carcinoma100, images_normal400, images_carcinoma400
     print(f"Found {len(images_normal)} images of class: normal and {len(images_carcinoma)} images of class: carcinoma", end="\n\n")
     return images_normal, images_carcinoma
 
