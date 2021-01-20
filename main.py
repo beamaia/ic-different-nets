@@ -40,7 +40,6 @@ def get_info():
     else:
         bea = False
 
-    system("clear")
     return first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea
 
 def main():
