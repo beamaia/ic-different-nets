@@ -1,6 +1,7 @@
 # importing libraries
 import torch
 import torchvision
+from torchvision import models
 import numpy as np
 
 import matplotlib.pyplot as plt
@@ -26,9 +27,18 @@ def save_model_dict (model, model_name, date, version=1):
     PATH = './saved_models/' + str(model_name)  + "_" + str(date) + "_" + str(version)
     torch.save(model.state_dict(), PATH)
 
-def load_model_dict (model, model_name, date, version=1):
+def load_model_dict (model_name, date, version=1, cpu=False):
     PATH = './saved_models/' + str(model_name)  + "_" + str(date) + "_" + str(version)
-    model.load_state_dict(torch.load(PATH))
+    print(f"CPU: {cpu}",end="\n\n")
+
+    if model_name is "resnet50":
+        model = models.resnet50(pretrained=True)
+
+    if not cpu:
+        model.load_state_dict(torch.load(PATH))
+    else:
+        device = torch.device('cpu')
+        model.load_state_dict(torch.load(PATH, map_location=device))
     return model
 
 def calculate_true_false_results (y_test, y_predict):
@@ -112,7 +122,6 @@ def save_test_accuracy (test_accuracy, model_name, date, version=1, new=False, s
     PATH = "./test_accuracies/accuracies.csv"
     # test_accuracy = str(test_accuracy)
     # version = str(version)
-    print(f"Accuracy: {test_accuracy:.2f} %")
     df = pd.DataFrame({'Model': [model_name],'Accuracy': [test_accuracy], 'Date': [date], 'Version':[version], 'Set': [sets]})
 
     if not new:
