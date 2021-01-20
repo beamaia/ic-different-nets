@@ -69,9 +69,9 @@ For data divided into 80% for training, 10% for validation and 10% for testing:
 
 #### Both Sets
 
-<!-- |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|
-|resnet50|%|%|20-01-2021|3|100|0.0001|None| -->
+|resnet50|99.49%|79.14%|20-01-2021|3|100|0.0001|None|
 <!-- |resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2| -->
 
 Key:
