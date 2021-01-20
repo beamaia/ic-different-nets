@@ -112,6 +112,7 @@ def test(model, test_loader):
             total += labels.size(0)
             accuracy += (predicted == labels).sum().item()
 
-    accuracy_test = accuracy / total * 100, y_predict
-    print("Finished test...")
-    return accuracy_test
+    accuracy_test = accuracy / total * 100
+    print(f"Accuracy: {accuracy_test}")
+    print("Finished test....")
+    return accuracy_test, y_predict
