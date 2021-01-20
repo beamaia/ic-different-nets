@@ -65,13 +65,13 @@ For data divided into 80% for training, 10% for validation and 10% for testing:
 |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|
 |resnet50|99.55%|79.84%|20-01-2021|1|100|0.0001|None|
-|resnet50|%|%|20-01-2021|2|100|0.0001|0.2|
+|resnet50|99.25%|74.76%|20-01-2021|2|100|0.0001|None|
 
-<!-- #### Both Sets
+#### Both Sets
 
-|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
+<!-- |Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
 |---|---|---|---|---|---|---|---|
-|resnet50|99.42%|79.58%|19-01-2021|3|100|0.0001|None| -->
+|resnet50|%|%|20-01-2021|3|100|0.0001|None| -->
 <!-- |resnet50|99.63%|75.60%|16-01-2021|2|100|0.0001|0.2| -->
 
 Key:
