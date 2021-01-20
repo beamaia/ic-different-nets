@@ -55,24 +55,24 @@ For data divided into 80% for training, 10% for validation and 10% for testing:
 
 #### First Set
 
-|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
-|---|---|---|---|---|---|---|---|
-|resnet50|99.64%|87.12%|19-01-2021|5|100|0.001|None|
-|resnet50|99.75%|85.54%|19-01-2021|6|100|0.001|None|
+|Model|Train Accuracy|Test Accuracy|Precision|Recall|F1|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|---|---|---|
+|resnet50|99.64%|87.12%|0.8456|0.9149|0.8789|19-01-2021|5|100|0.001|None|
+|resnet50|99.75%|85.54%|0.8490|0.8635|0.8562|19-01-2021|6|100|0.001|None|
 
 #### Second Set
 
-|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
-|---|---|---|---|---|---|---|---|
-|resnet50|99.55%|79.84%|20-01-2021|1|100|0.0001|None|
-|resnet50|99.25%|74.76%|20-01-2021|2|100|0.0001|None|
+|Model|Train Accuracy|Test Accuracy|Precision|Recall|F1|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|---|---|---|
+|resnet50|99.55%|79.84%|0.7139|0.7612|0.7368|20-01-2021|1|100|0.0001|None|
+|resnet50|99.25%|74.76%|0.7154|0.7043|0.7098|20-01-2021|2|100|0.0001|None|
 
 #### Both Sets
 
-|Model|Train Accuracy|Test Accuracy|Date|Version|Epoch|LR|Dropout|
-|---|---|---|---|---|---|---|---|
-|resnet50|99.49%|79.14%|20-01-2021|3|100|0.0001|None|
-|resnet50|99.52%|78.81%|20-01-2021|4|100|0.0001|None|
+|Model|Train Accuracy|Test Accuracy|Precision|Recall|F1|Date|Version|Epoch|LR|Dropout|
+|---|---|---|---|---|---|---|---|---|---|---|
+|resnet50|99.49%|79.14%|0.7669|0.8328|0.7985|20-01-2021|3|100|0.0001|None|
+|resnet50|99.52%|78.81%|0.7588|0.7931|0.7756|20-01-2021|4|100|0.0001|None|
 
 Key:
 + Model: name of the model used;
