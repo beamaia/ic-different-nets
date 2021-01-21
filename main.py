@@ -23,7 +23,7 @@ def get_info():
     elif sets==3:
         both_sets = True
 
-    # dp = float(input("Dropout rate:\n"))
+    dp = float(input("Dropout rate:\n"))
     model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
     date = input("Date:\n")
     version = int(input("Version:\n"))
@@ -40,11 +40,11 @@ def get_info():
     else:
         bea = False
 
-    return first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea
+    return first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp
 
 def main():
 
-    first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea = get_info()
+    first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp = get_info()
     # images
     print("Processing images...")
 
@@ -91,13 +91,18 @@ def main():
     
     if model_name == "resnet50":
         model = models.resnet50(pretrained=True)
-        # num_ftrs = model.fc.in_features
-        # model.fc = nn.Sequential(
-        #     nn.Dropout(dp), #change here
-        #     nn.Linear(num_ftrs, 10)
-        # )
+        num_ftrs = model.fc.in_features
+        model.fc = nn.Sequential(
+            nn.Dropout(dp), #change here
+            nn.Linear(num_ftrs, 10)
+        )
     elif model_name == "mobilenetv2":
         model = models.mobilenet_v2(pretrained=True)
+        num_ftrs = model.fc.in_features
+        model.fc = nn.Sequential(
+            nn.Dropout(dp), #change here
+            nn.Linear(num_ftrs, 10)
+        )
     # elif model_name == "inceptionv3":
     #     model = models.inception_v3(pretrained=True)
     #     print(model)
@@ -114,8 +119,8 @@ def main():
     array_val_losses = np.asarray(val_losses)
 
     # saving data
-    PATH = './saved_models/' + str(model_name) + "_" + str(date) + "_" + str(version)
-    torch.save(model.state_dict(), PATH)
+    # PATH = './saved_models/' + str(model_name) + "_" + str(date) + "_" + str(version)
+    # torch.save(model.state_dict(), PATH)
 
     utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date, model_name, version, training=True)
     utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date, version=version, training=True)
