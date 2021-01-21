@@ -47,36 +47,13 @@ def main():
     first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp = get_info()
     # images
     print("Processing images...")
-
-    # if both_sets:
-    #     images_normal100, images_carcinoma100, images_normal400, images_carcinoma400  = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
-    #     x_normal100 = dt.process_images(images_normal100)
-    #     x_carcinoma100 = dt.process_images(images_carcinoma100)
-    #     images100, labels100 = dt.create_images_labels(x_normal100, x_carcinoma100)
-    #     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images100, labels100, 0.3)
-
-    #     # dataloaders
-    #     train_loader100, val_loader100, test_loader100 = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
-    #     #unfinished 
-    # else:
-    #     images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
-    #     x_normal = dt.process_images(images_normal)
-    #     x_carcinoma = dt.process_images(images_carcinoma)
-    #     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
-
-    #     print("Creating train, validation and test images...")
-    #     # split
-    #     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.3)
-
-    #     # dataloaders
-    #     train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
-
     images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
     x_normal = dt.process_images(images_normal)
     x_carcinoma = dt.process_images(images_carcinoma)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
     print("Creating train, validation and test images...")
+
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
@@ -105,6 +82,7 @@ def main():
         )
     # elif model_name == "inceptionv3":
     #     model = models.inception_v3(pretrained=True)
+    # kernel size different
     #     print(model)
 
     # train
@@ -122,12 +100,6 @@ def main():
     # PATH = './saved_models/' + str(model_name) + "_" + str(date) + "_" + str(version)
     # torch.save(model.state_dict(), PATH)
 
-    utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date, model_name, version, training=True)
-    utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date, version=version, training=True)
-
-    utils.save_txt_accuracy_loss(array_val_accuracies, array_val_losses, date, model_name, version, training=False)
-    utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date, version=version, training=False)
-
     # test
     test_accuracy, y_predict = tr.test(model, test_loader)
 
@@ -135,6 +107,13 @@ def main():
 
     utils.save_test_accuracy(test_accuracy, model_name, date, version, new=False, sets=sets) # change here
     utils.save_y_true_predict(y_test, y_predict, model_name, date, version)
+
+    # Saving info
+    utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date, model_name, version, training=True)
+    utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date, version=version, training=True)
+
+    # utils.save_txt_accuracy_loss(array_val_accuracies, array_val_losses, date, model_name, version, training=False)
+    utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date, version=version, training=False)
 
 if __name__ == "__main__":
     main()
