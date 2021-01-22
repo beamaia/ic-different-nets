@@ -75,11 +75,11 @@ def main():
         )
     elif model_name == "mobilenetv2":
         model = models.mobilenet_v2(pretrained=True)
-        num_ftrs = model.fc.in_features
-        model.fc = nn.Sequential(
-            nn.Dropout(dp), #change here
-            nn.Linear(num_ftrs, 10)
-        )
+        # num_ftrs = model.fc.in_features
+        # model.fc = nn.Sequential(
+        #     nn.Dropout(dp), #change here
+        #     nn.Linear(num_ftrs, 10)
+        # )
     # elif model_name == "inceptionv3":
     #     model = models.inception_v3(pretrained=True)
     # kernel size different
