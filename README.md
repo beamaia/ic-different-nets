@@ -9,7 +9,7 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 ## Neural Networks studied:
 
 + :o: ResNet50
-+ :x: MobileNet_v2
++ :o: MobileNet_v2
 + :x: Inception_v3
 
 ### Results
@@ -69,6 +69,7 @@ For data divided into 80% for training, 10% for validation and 10% for testing:
 |---|---|---|---|---|---|---|---|---|---|---|
 |resnet50|99.55%|79.84%|0.7139|0.7612|0.7368|20-01-2021|1|100|0.0001|None|
 |resnet50|99.25%|74.76%|0.7154|0.7043|0.7098|20-01-2021|2|100|0.0001|None|
+|mobilenet_v2|99.26%|76.58%|0.7183|0.7525|0.7355|22-01-2021|3|200|0.001|None|
 
 #### Both Sets
 
