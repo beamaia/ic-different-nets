@@ -79,6 +79,7 @@ For data divided into 80% for training, 10% for validation and 10% for testing:
 |resnet50|99.49%|79.14%|0.7669|0.8328|0.7985|20-01-2021|3|100|0.0001|None|
 |resnet50|99.52%|78.81%|0.7588|0.7931|0.7756|20-01-2021|4|100|0.0001|None|
 |mobilenet_v2|99.37%|79.74%|0.7600|0.8367|0.7965|23-01-2021|1|200|0.001|None|
+|mobilenet_v2|99.04%|76.36%|0.7588|0.7920|0.7751|23-01-2021|2|200|0.001|None|
 
 Key:
 + Model: name of the model used;
