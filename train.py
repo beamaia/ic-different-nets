@@ -34,7 +34,7 @@ def train (model, train_loader, val_loader, num_epochs, lr):
         y_predict_loader = []
         for _, data in enumerate(train_loader):
             images, labels = data[0].to(device), data[1].to(device)
-
+            print(len(images))
             # Zero the parameter gradients
             optimizer.zero_grad()
 

@@ -52,7 +52,7 @@ def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
     return images_normal, images_carcinoma
 
 def process_images(images):
-    height, width = 250, 250
+    height, width = 299, 299
     
     x = []
         
@@ -62,19 +62,20 @@ def process_images(images):
         
         x.append(image)
 
-    return np.array(x)
+    x = np.array(x)
+    return x
 
 def create_images_labels(x_normal, x_carcinoma):
     # Creating patches
-    pe = PatchExtractor(patch_size = (30, 30), max_patches = 30)
-    patches_normal = pe.transform(x_normal)
-    patches_carcinoma = pe.transform(x_carcinoma)
-    images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
-
+    # pe = PatchExtractor(patch_size = (299, 299), max_patches = 30)
+    # patches_normal = pe.transform(x_normal)
+    # patches_carcinoma = pe.transform(x_carcinoma)
+    # images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
+    images = np.concatenate((x_carcinoma, x_normal), axis=0)
     labels = []
 
-    labels_nr = [0 for i,_ in enumerate(patches_normal)]
-    labels_ca = [1 for i,_ in enumerate(patches_carcinoma)]
+    labels_nr = [0 for i,_ in enumerate(x_normal)]
+    labels_ca = [1 for i,_ in enumerate(x_carcinoma)]
     labels = labels_nr + labels_ca
 
     labels = np.array(labels)
@@ -115,9 +116,11 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     x_val /=255.
     x_test /= 255.
 
-    x_train = x_train.reshape(-1, 3, 30, 30)
-    x_val = x_val.reshape(-1, 3, 30, 30)
-    x_test = x_test.reshape(-1, 3, 30, 30)
+    print(x_test.shape, x_train.shape, x_val.shape)
+    x_train = x_train.reshape(-1, 3, 299, 299)
+    x_val = x_val.reshape(-1, 3, 299, 299)
+    x_test = x_test.reshape(-1, 3, 299, 299)
+    print(x_test.shape, x_train.shape, x_val.shape)
 
     train_set = DatasetOral(x_train, y_train)
     train_loader = DataLoader(train_set, **params)
@@ -127,6 +130,11 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
 
     test_set = DatasetOral(x_test, y_test)
     test_loader = DataLoader(test_set, **params)
+
+    print("Dataset shapes:")
+    print(f"Train: {train_set.__getitem__(0)[0].size()}")
+    print(f"Test: {test_set.__getitem__(0)[0].size()}")
+    print(f"Val: {val_set.__getitem__(0)[0].size()}")
 
     return train_loader, val_loader, test_loader
 

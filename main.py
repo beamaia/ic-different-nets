@@ -75,10 +75,9 @@ def main():
         )
     elif model_name == "mobilenetv2":
         model = models.mobilenet_v2(pretrained=True)
-    # elif model_name == "inceptionv3":
-    #     model = models.inception_v3(pretrained=True)
-    # kernel size different
-    #     print(model)
+    elif model_name == "inceptionv3":
+        model = models.inception_v3(pretrained=True)
+        # print(model)
 
     # train
     train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, train_loader, val_loader, **params)
