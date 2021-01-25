@@ -77,6 +77,7 @@ def main():
         model = models.mobilenet_v2(pretrained=True)
     elif model_name == "inceptionv3":
         model = models.inception_v3(pretrained=True)
+        model.aux_logits=False
         # print(model)
 
     # train

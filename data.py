@@ -116,11 +116,9 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     x_val /=255.
     x_test /= 255.
 
-    print(x_test.shape, x_train.shape, x_val.shape)
     x_train = x_train.reshape(-1, 3, 299, 299)
     x_val = x_val.reshape(-1, 3, 299, 299)
     x_test = x_test.reshape(-1, 3, 299, 299)
-    print(x_test.shape, x_train.shape, x_val.shape)
 
     train_set = DatasetOral(x_train, y_train)
     train_loader = DataLoader(train_set, **params)
@@ -130,11 +128,6 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
 
     test_set = DatasetOral(x_test, y_test)
     test_loader = DataLoader(test_set, **params)
-
-    print("Dataset shapes:")
-    print(f"Train: {train_set.__getitem__(0)[0].size()}")
-    print(f"Test: {test_set.__getitem__(0)[0].size()}")
-    print(f"Val: {val_set.__getitem__(0)[0].size()}")
 
     return train_loader, val_loader, test_loader
 
