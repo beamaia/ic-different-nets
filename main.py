@@ -105,6 +105,8 @@ def main():
 
     # Saving info
     utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date, model_name, version, training=True)
+    
+    print("Plotting images...")
     utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date, version=version, training=True)
 
     # utils.save_txt_accuracy_loss(array_val_accuracies, array_val_losses, date, model_name, version, training=False)
