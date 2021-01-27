@@ -76,8 +76,7 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
         model = models.mobilenet_v2(pretrained=True)
 
     elif model_name == "inceptionv3":
-        model = models.inception_v3(pretrained=True)
-        aux_logits=False
+        model = models.inception_v3(pretrained=True, aux_logits = False)
         # print(model)
 
     else:

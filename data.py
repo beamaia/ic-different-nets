@@ -151,7 +151,7 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     x_val = x_val.reshape(-1, 3, w, h)
     x_test = x_test.reshape(-1, 3, w, h)
 
-    print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
+    # print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
 
     train_set = DatasetOral(x_train, y_train)
     train_loader = DataLoader(train_set, **params)

@@ -33,27 +33,29 @@ def train (model, model_name, train_loader, val_loader, num_epochs, lr):
         total_train = 0
         accuracies_train = 0
         y_predict_loader = []
-        print(len(train_loader))
+        
         for _, data in enumerate(train_loader):
             images, labels = data[0].to(device), data[1].to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
 
-            if is_inception:
-                #Forward
-                outputs, aux_outputs = model(images)
+            # if is_inception:
+            #     #Forward
+            #     # outputs, aux_outputs = model(images)
+            #     outputs = model(images)
 
-                #Backward
-                loss1 = criterion(outputs, labels)
-                loss2 = criterion(aux_outputs, labels)
-                loss = loss1 + 0.4*loss2
-            else:
-                #Forward
-                outputs, hidden = model(images)
+            #     #Backward
+            #     loss1 = criterion(outputs, labels)
+            #     loss2 = criterion(aux_outputs, labels)
+            #     loss = loss1 + 0.4*loss2
+            # else:
+            #Forward
+            outputs = model(images)
 
-                #Backward
-                loss = criterion(outputs, labels).to(device)
-                loss.backward()
+            #Backward
+            loss = criterion(outputs, labels).to(device)
+            loss.backward()
+
             #Optimize
             optimizer.step()
 
@@ -84,14 +86,14 @@ def train (model, model_name, train_loader, val_loader, num_epochs, lr):
                 # images, labels = data[0], data[1]
                 images, labels = images.to(device), labels.to(device)
 
-                if is_inception:
-                    outputs, aux_outputs = model(images)
-                    val_loss1 = criterion(outputs, labels)
-                    val_loss2 = criterion(aux_outputs, labels)
-                    val_loss = val_loss1 + 0.4*val_loss2
-                else:
-                    outputs = model(images)
-                    val_loss = criterion(outputs, labels)
+                # if is_inception:
+                #     outputs, aux_outputs = model(images)
+                #     val_loss1 = criterion(outputs, labels)
+                #     val_loss2 = criterion(aux_outputs, labels)
+                #     val_loss = val_loss1 + 0.4*val_loss2
+                # else:
+                outputs = model(images)
+                val_loss = criterion(outputs, labels)
 
                 running_val_loss += loss.item()
                 total_val += labels.size(0)
