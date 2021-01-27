@@ -9,11 +9,12 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import utils
 
-def train (model, train_loader, val_loader, num_epochs, lr):
+def train (model, model_name, train_loader, val_loader, num_epochs, lr):
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     print(f"Device: {device}",end="\n\n")
+    is_inception = model_name.lower() == "inceptionv3"
 
     criterion = nn.CrossEntropyLoss() #Loss function
     optimizer = optim.Adam(model.parameters(), lr=lr)
@@ -32,18 +33,27 @@ def train (model, train_loader, val_loader, num_epochs, lr):
         total_train = 0
         accuracies_train = 0
         y_predict_loader = []
+        print(len(train_loader))
         for _, data in enumerate(train_loader):
             images, labels = data[0].to(device), data[1].to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
 
-            #Forward
-            outputs = model(images)
+            if is_inception:
+                #Forward
+                outputs, aux_outputs = model(images)
 
-            #Backward
-            loss = criterion(outputs, labels).to(device)
-            loss.backward()
+                #Backward
+                loss1 = criterion(outputs, labels)
+                loss2 = criterion(aux_outputs, labels)
+                loss = loss1 + 0.4*loss2
+            else:
+                #Forward
+                outputs, hidden = model(images)
 
+                #Backward
+                loss = criterion(outputs, labels).to(device)
+                loss.backward()
             #Optimize
             optimizer.step()
 
@@ -69,13 +79,21 @@ def train (model, train_loader, val_loader, num_epochs, lr):
        
         with torch.no_grad():
             accuracies_val = 0  
+            running_val_loss = 0
             for _, data in enumerate(val_loader):
                 # images, labels = data[0], data[1]
                 images, labels = images.to(device), labels.to(device)
 
-                outputs = model(images)
-                loss = criterion(outputs, labels).to(device)
-                val_loss += loss.item()
+                if is_inception:
+                    outputs, aux_outputs = model(images)
+                    val_loss1 = criterion(outputs, labels)
+                    val_loss2 = criterion(aux_outputs, labels)
+                    val_loss = val_loss1 + 0.4*val_loss2
+                else:
+                    outputs = model(images)
+                    val_loss = criterion(outputs, labels)
+
+                running_val_loss += loss.item()
                 total_val += labels.size(0)
                 _, predicted = torch.max(outputs, 1)
                 accuracies_val += (predicted == labels).sum().item()
@@ -83,10 +101,10 @@ def train (model, train_loader, val_loader, num_epochs, lr):
         accuracy_val = accuracies_val / total_val * 100
 
         print(f"Val Accuracy: {accuracy_val:.2f} %")
-        print(f"Val Loss: {np.mean(val_loss):.2f}", end="\n\n")
+        print(f"Val Loss: {np.mean(running_val_loss):.2f}", end="\n\n")
         
         # Saving validation and 
-        val_losses.append(np.mean(val_loss))
+        val_losses.append(np.mean(running_val_loss))
         val_accuracies.append(accuracy_val)
 
     print("Finished training")

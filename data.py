@@ -82,19 +82,23 @@ def create_images_labels(x_normal, x_carcinoma, patch_size=30, max_patches=30):
 
     print("Creating patches...")
     
-    pe = PatchExtractor(patch_size = (patch_size, patch_size), max_patches = max_patches)
-    patches_normal = pe.transform(x_normal)
-    patches_carcinoma = pe.transform(x_carcinoma)
-    images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
-    # images = np.concatenate((x_carcinoma, x_normal), axis=0)
+    # pe = PatchExtractor(patch_size = (patch_size, patch_size), max_patches = max_patches)
+    # patches_normal = pe.transform(x_normal)
+    # patches_carcinoma = pe.transform(x_carcinoma)
+    # images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
+    images = np.concatenate((x_carcinoma, x_normal), axis=0)
 
     # in order to tweak inception
     print(images.shape)
-    print(patches_normal.shape)
-    print(patches_carcinoma.shape)
+    # print(patches_normal.shape)
+    # print(patches_carcinoma.shape)
 
-    labels_nr = np.zeros(len(patches_normal))
-    labels_ca = np.ones(len(patches_carcinoma))
+    # labels_nr = np.zeros(len(patches_normal))
+    # labels_ca = np.ones(len(patches_carcinoma))
+    # labels = np.concatenate((labels_nr, labels_ca))
+
+    labels_nr = np.zeros(len(x_normal))
+    labels_ca = np.ones(len(x_carcinoma))
     labels = np.concatenate((labels_nr, labels_ca))
 
     # in order to tweak inception
@@ -142,11 +146,12 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     x_val /=255.
     x_test /= 255.
 
-    print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
+    w, h = x_train.shape[1], x_train.shape[2]
+    x_train = x_train.reshape(-1, 3, w, h)
+    x_val = x_val.reshape(-1, 3, w, h)
+    x_test = x_test.reshape(-1, 3, w, h)
 
-    x_train = x_train.reshape(-1, 3, 30, 30)
-    x_val = x_val.reshape(-1, 3, 30, 30)
-    x_test = x_test.reshape(-1, 3, 30, 30)
+    print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
 
     train_set = DatasetOral(x_train, y_train)
     train_loader = DataLoader(train_set, **params)

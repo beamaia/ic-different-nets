@@ -13,7 +13,7 @@ import train as tr
 import utils
 
 def get_arg(args):
-    if lens(args) != 8:
+    if len(args) != 8:
         sys.exit(1)
 
     set_numb = int(sys.argv[1])
@@ -25,9 +25,9 @@ def get_arg(args):
     server = sys.argv[7] 
     
     today = date.today()
-    date = today.strftime("%d-%m-%y")
+    date_today = today.strftime("%d-%m-%y")
 
-    return set_numb, epochs, lr, model_name, dp, version, server, date
+    return set_numb, epochs, lr, model_name, dp, version, server, date_today
 
 
 
@@ -37,26 +37,26 @@ def get_info():
     lr = float(input("Learning rate:\n"))
     dp = float(input("Dropout rate:\n"))
     model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
-    date = input("Date:\n")
+    date_today = input("Date:\n")
     version = int(input("Version:\n"))
     server = (input("Server:\n"))
 
-    return sets, epochs, lr, dp, model_name, date, version, server
+    return sets, epochs, lr, dp, model_name, date_today, version, server
 
-def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton"):
-    # set_numb, epochs, lr, dp, model_name, date, version, server = get_info()
+def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton"):
+    # set_numb, epochs, lr, dp, model_name,  date_today, version, server = get_info()
     
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
-    x_normal = dt.process_images(images_normal)
-    x_carcinoma = dt.process_images(images_carcinoma)
+    x_normal = dt.process_images(images_normal, 299, 299)
+    x_carcinoma = dt.process_images(images_carcinoma, 299, 299)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
     # dataloaders
-    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val)
+    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, 50)
 
     print("Configuring model...",end="\n\n")
     params = {
@@ -77,14 +77,16 @@ def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5,
 
     elif model_name == "inceptionv3":
         model = models.inception_v3(pretrained=True)
-        model.aux_logits=False
+        aux_logits=False
+        # print(model)
 
     else:
         print("Model not identified")
         sys.exit(1)
 
+
     # train
-    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, train_loader, val_loader, **params)
+    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, model_name, train_loader, val_loader, **params)
 
     print("Saving training data...", end="\n\n")
     
@@ -94,28 +96,28 @@ def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5,
     array_val_accuracies = np.asarray(val_accuracies)
     array_val_losses = np.asarray(val_losses)
 
-    # save_model_dict (model, model_name, date, version)
+    # save_model_dict (model, model_name,  date_today, version)
 
     # test
     test_accuracy, y_predict = tr.test(model, test_loader)
 
     print("Saving test data...")
 
-    utils.save_test_accuracy(test_accuracy, model_name, date, version, new=False, sets=set_numb) # change here
-    utils.save_y_true_predict(y_test, y_predict, model_name, date, version)
+    utils.save_test_accuracy(test_accuracy, model_name, date_today, version, new=False, sets=set_numb) # change here
+    utils.save_y_true_predict(y_test, y_predict, model_name, date_today, version)
 
     # Saving info
-    utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date, model_name, version, training=True)
+    utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date_today, model_name, version, training=True)
     
     print("Plotting images...")
-    utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date, version=version, training=True)
+    utils.plot_accuracy_loss(epochs, model_name, losses=array_train_losses, accuracies=array_train_accuracies, date=date_today, version=version, training=True)
 
     # utils.save_txt_accuracy_loss(array_val_accuracies, array_val_losses, date, model_name, version, training=False)
-    utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date, version=version, training=False)
+    utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date_today, version=version, training=False)
 
 if __name__ == "__main__":
     arg = sys.argv
 
-    set_numb, epochs, lr, model_name, dp, version, server, date = get_arg(args)
+    set_numb, epochs, lr, model_name, dp, version, server, date_today = get_arg(arg)
 
-    main(date, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server)
+    main(date_today, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server)
