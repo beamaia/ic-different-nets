@@ -12,40 +12,39 @@ import data as dt
 import train as tr
 import utils
 
+def get_arg(args):
+    if lens(args) != 8:
+        sys.exit(1)
+
+    set_numb = int(sys.argv[1])
+    epochs = int(sys.argv[2])
+    lr = float(sys.argv[3])
+    model_name = sys.argv[4] 
+    dp = float(sys.argv[5])
+    version = int(sys.argv[6])
+    server = sys.argv[7] 
+    
+    today = date.today()
+    date = today.strftime("%d-%m-%y")
+
+    return set_numb, epochs, lr, model_name, dp, version, server, date
+
+
+
 def get_info():
     sets = int(input("(1) First set, (2) Second Set, (3) Both \n"))
     epochs = int(input("Number of epochs:\n"))
     lr = float(input("Learning rate:\n"))
-
-    first_set = False
-    both_sets = False
-
-    if sets == 1:
-        first_set = True
-    elif sets==3:
-        both_sets = True
-
     dp = float(input("Dropout rate:\n"))
     model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
     date = input("Date:\n")
     version = int(input("Version:\n"))
+    server = (input("Server:\n"))
 
-    hinton = (input("Hinton:\n"))
-    if hinton == "True":
-        hinton = True
-    else:
-        hinton = False
-
-    bea = (input("Bea:\n"))
-    if bea == "True":
-        bea = True
-    else:
-        bea = False
-
-    return first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp
+    return sets, epochs, lr, dp, model_name, date, version, server
 
 def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton"):
-    # first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp = get_info()
+    # set_numb, epochs, lr, dp, model_name, date, version, server = get_info()
     
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
@@ -117,15 +116,6 @@ def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5,
 if __name__ == "__main__":
     arg = sys.argv
 
-    set_numb = int(sys.argv[1])
-    epochs = int(sys.argv[2])
-    lr = float(sys.argv[3])
-    model_name = sys.argv[4] 
-    dp = float(sys.argv[5])
-    version = int(sys.argv[6])
-    server = sys.argv[7] 
-
-    today = date.today()
-    date = today.strftime("%d-%m-%y")
+    set_numb, epochs, lr, model_name, dp, version, server, date = get_arg(args)
 
     main(date, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server)
