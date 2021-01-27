@@ -1,17 +1,25 @@
 import torch
-import torchvision
 from torch.utils.data import Dataset, DataLoader
 import torchvision.transforms as transforms
 
 from glob import glob
-import fnmatch
 import cv2
+import sys
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.image import PatchExtractor
 import numpy as np
 
-def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
+def image_paths(set_num=1, server="bea"):
+    print("Getting images' path...")
+    print(f"Server: {server} - Set: {set_num}")
+    first_set= set_num == 1
+    both_sets = set_num == 3
+
+    home = server.lower() == "bea"
+    hinton = server.lower() == "hinton"
+    turing = server.lower() == "turing"
+
     PATH_normal100x = 'First Set/100x Normal Oral Cavity Histopathological Images/*'
     PATH_carcinoma100x = 'First Set/100x OSCC Histopathological Images/*'
     PATH_normal400x = 'Second Set/400x Normal Oral Cavity Histopathological Images/*'
@@ -19,27 +27,27 @@ def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
     
     if home:
         PATH_ini = ".././data/oralCancer-Borooah/"
-    elif Hinton:
+    elif hinton:
         PATH_ini = "/home/hinton/Desktop/Humberto/"
-    else:
+    elif turing:
         PATH_ini = "./data/oralCancer-Borooah/"
-
-    if not Both_Set:
-        if First_Set:
-            PATH_normal = PATH_ini + PATH_normal100x
-            PATH_carcinoma = PATH_ini + PATH_carcinoma100x
-        else:
-            PATH_normal = PATH_ini + PATH_normal400x
-            PATH_carcinoma = PATH_ini + PATH_carcinoma400x
+    else:
+        print("Server not identified")
+        sys.exit(1)
         
-        images_normal = glob(PATH_normal)
-        images_carcinoma = glob(PATH_carcinoma)
+    PATH_normal100 = PATH_ini + PATH_normal100x
+    PATH_carcinoma100 = PATH_ini + PATH_carcinoma100x
+    PATH_normal400 = PATH_ini + PATH_normal400x
+    PATH_carcinoma400 = PATH_ini + PATH_carcinoma400x
+    if not both_sets:
+        if first_set:
+            images_normal = glob(PATH_normal100)
+            images_carcinoma = glob(PATH_carcinoma100)
+        else:
+            images_normal = glob(PATH_normal400)
+            images_carcinoma = glob(PATH_carcinoma400)      
 
     else:
-        PATH_normal100 = PATH_ini + PATH_normal100x
-        PATH_carcinoma100 = PATH_ini + PATH_carcinoma100x
-        PATH_normal400 = PATH_ini + PATH_normal400x
-        PATH_carcinoma400 = PATH_ini + PATH_carcinoma400x
         images_normal100 = glob(PATH_normal100)
         images_carcinoma100 = glob(PATH_carcinoma100)
         images_normal400 = glob(PATH_normal400)
@@ -47,48 +55,65 @@ def image_paths(First_Set=True, Both_Set=False, Hinton=False, home=False):
 
         images_normal = images_normal100 + images_normal400
         images_carcinoma = images_carcinoma100 + images_carcinoma400
-        # return images_normal100, images_carcinoma100, images_normal400, images_carcinoma400
+
     print(f"Found {len(images_normal)} images of class: normal and {len(images_carcinoma)} images of class: carcinoma", end="\n\n")
+    
+    if len(images_normal) == 0 or len(images_carcinoma) == 0:
+        print("Folder not found!")
+        sys.exit(1)
     return images_normal, images_carcinoma
 
-def process_images(images):
-    height, width = 299, 299
+def process_images(images, height=250, width=250):
+    print("Processing images...", end="\n\n")
     
-    x = []
+    pros_images = []
         
-    for _, img in enumerate(images):
+    for img in images:
         full_size_image = cv2.imread(img)
         image = (cv2.resize(full_size_image, (width, height), interpolation = cv2.INTER_CUBIC))
         
-        x.append(image)
+        pros_images.append(image)
 
-    x = np.array(x)
-    return x
+    pros_images = np.array(pros_images)
 
-def create_images_labels(x_normal, x_carcinoma):
-    # Creating patches
-    # pe = PatchExtractor(patch_size = (299, 299), max_patches = 30)
-    # patches_normal = pe.transform(x_normal)
-    # patches_carcinoma = pe.transform(x_carcinoma)
-    # images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
-    images = np.concatenate((x_carcinoma, x_normal), axis=0)
-    labels = []
+    return pros_images
 
-    labels_nr = [0 for i,_ in enumerate(x_normal)]
-    labels_ca = [1 for i,_ in enumerate(x_carcinoma)]
-    labels = labels_nr + labels_ca
+def create_images_labels(x_normal, x_carcinoma, patch_size=30, max_patches=30):
 
-    labels = np.array(labels)
+    print("Creating patches...")
+    
+    pe = PatchExtractor(patch_size = (patch_size, patch_size), max_patches = max_patches)
+    patches_normal = pe.transform(x_normal)
+    patches_carcinoma = pe.transform(x_carcinoma)
+    images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
+    # images = np.concatenate((x_carcinoma, x_normal), axis=0)
+
+    # in order to tweak inception
+    print(images.shape)
+    print(patches_normal.shape)
+    print(patches_carcinoma.shape)
+
+    labels_nr = np.zeros(len(patches_normal))
+    labels_ca = np.ones(len(patches_carcinoma))
+    labels = np.concatenate((labels_nr, labels_ca))
+
+    # in order to tweak inception
+    print(labels.shape)
+    print(labels_nr.shape)
+    print(labels_ca.shape)
 
     images = torch.from_numpy(images)
     labels = torch.Tensor(labels) 
 
     images = images.type(torch.FloatTensor) 
     labels = labels.type(torch.LongTensor) 
-
+    
+    print("Created images and labels...")
     return images, labels
 
 def create_train_test(images, labels, test_size):
+    print("Creating train, validation and test images...", end="\n\n")
+
     x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=test_size, random_state=42)
     x_val, x_test, y_val, y_test = train_test_split(x_test, y_test, test_size =0.5, random_state=42)
 
@@ -108,6 +133,7 @@ class DatasetOral(torch.utils.data.Dataset):
         return self.images[index], self.labels[index]
 
 def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_size=64, shuffle=True, num_workers=2):
+    print("Creating dataloaders...", end='\n\n')
     params = {'batch_size': batch_size,
               'shuffle': shuffle,
               'num_workers': num_workers}
@@ -116,9 +142,11 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     x_val /=255.
     x_test /= 255.
 
-    x_train = x_train.reshape(-1, 3, 299, 299)
-    x_val = x_val.reshape(-1, 3, 299, 299)
-    x_test = x_test.reshape(-1, 3, 299, 299)
+    print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
+
+    x_train = x_train.reshape(-1, 3, 30, 30)
+    x_val = x_val.reshape(-1, 3, 30, 30)
+    x_test = x_test.reshape(-1, 3, 30, 30)
 
     train_set = DatasetOral(x_train, y_train)
     train_loader = DataLoader(train_set, **params)

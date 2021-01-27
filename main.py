@@ -1,10 +1,12 @@
 import torch
-import torchvision
 from torchvision import models
 import torch.nn as nn
 
 import numpy as np
+
 from os import system
+import sys
+from datetime import date
 
 import data as dt
 import train as tr
@@ -42,17 +44,14 @@ def get_info():
 
     return first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp
 
-def main():
-
-    first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp = get_info()
-    # images
-    print("Processing images...")
-    images_normal, images_carcinoma = dt.image_paths(First_Set=first_set, Both_Set= both_sets, Hinton=hinton, home=bea)
+def main(date, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton"):
+    # first_set, both_sets, epochs, lr, sets, model_name, date, version, hinton, bea, dp = get_info()
+    
+    # images    
+    images_normal, images_carcinoma = dt.image_paths(set_numb, server)
     x_normal = dt.process_images(images_normal)
     x_carcinoma = dt.process_images(images_carcinoma)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
-
-    print("Creating train, validation and test images...")
 
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
@@ -73,12 +72,17 @@ def main():
             nn.Dropout(dp), #change here
             nn.Linear(num_ftrs, 10)
         )
+
     elif model_name == "mobilenetv2":
         model = models.mobilenet_v2(pretrained=True)
+
     elif model_name == "inceptionv3":
         model = models.inception_v3(pretrained=True)
         model.aux_logits=False
-        # print(model)
+
+    else:
+        print("Model not identified")
+        sys.exit(1)
 
     # train
     train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, train_loader, val_loader, **params)
@@ -91,16 +95,14 @@ def main():
     array_val_accuracies = np.asarray(val_accuracies)
     array_val_losses = np.asarray(val_losses)
 
-    # saving data
-    # PATH = './saved_models/' + str(model_name) + "_" + str(date) + "_" + str(version)
-    # torch.save(model.state_dict(), PATH)
+    # save_model_dict (model, model_name, date, version)
 
     # test
     test_accuracy, y_predict = tr.test(model, test_loader)
 
     print("Saving test data...")
 
-    utils.save_test_accuracy(test_accuracy, model_name, date, version, new=False, sets=sets) # change here
+    utils.save_test_accuracy(test_accuracy, model_name, date, version, new=False, sets=set_numb) # change here
     utils.save_y_true_predict(y_test, y_predict, model_name, date, version)
 
     # Saving info
@@ -113,4 +115,17 @@ def main():
     utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date, version=version, training=False)
 
 if __name__ == "__main__":
-    main()
+    arg = sys.argv
+
+    set_numb = int(sys.argv[1])
+    epochs = int(sys.argv[2])
+    lr = float(sys.argv[3])
+    model_name = sys.argv[4] 
+    dp = float(sys.argv[5])
+    version = int(sys.argv[6])
+    server = sys.argv[7] 
+
+    today = date.today()
+    date = today.strftime("%d-%m-%y")
+
+    main(date, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server)
