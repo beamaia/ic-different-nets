@@ -51,7 +51,7 @@ For data divided into 70% for training, 15% for validation and 15% for testing:
 |resnet50|99.44%|74.73%|18-01-2021|1|100|0.0001|0.5|
 |resnet50|99.56%|77.07%|19-01-2021|2|100|0.0001|0.5|
 
-From day 25-01-2021, the models were trained without using patches. For data divided into 80% for training, 10% for validation and 10% for testing:
+From day 19-01-2021, the models were trained without using patches. For data divided into 80% for training, 10% for validation and 10% for testing:
 
 #### First Set
 
@@ -86,6 +86,8 @@ From day 25-01-2021, the models were trained without using patches. For data div
 |resnet50|99.52%|78.81%|0.7588|0.7931|0.7756|20-01-2021|4|100|0.0001|None|
 |mobilenet_v2|99.37%|79.74%|0.7600|0.8367|0.7965|23-01-2021|1|200|0.001|None|
 |mobilenet_v2|99.04%|76.36%|0.7588|0.7920|0.7751|23-01-2021|2|200|0.001|None|
+|mobilenet_v2|99.90%|79.67%|0.7816|0.7234|0.7514|28-01-2021|4|200|0.001|None|
+|mobilenet_v2|99.28%|76.42%|0.7957|0.7872|0.7914|28-01-2021|5|200|0.001|None|
 |inception_v3|99.80%|82.11%|0.7717|0.7553|0.7634|27-01-2021|2|200|0.001|None|
 |inception_v3|99.80%|82.93%|0.7407|0.6383|0.6857|28-01-2021|1|200|0.001|None|
 |resnet50|99.74%|79.68%|0.7594|0.8443|0.7996|23-01-2021|3|200|0.0001|0.5|
