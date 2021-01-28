@@ -48,15 +48,15 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
-    x_normal = dt.process_images(images_normal, 299, 299)
-    x_carcinoma = dt.process_images(images_carcinoma, 299, 299)
+    x_normal = dt.process_images(images_normal,224,224)
+    x_carcinoma = dt.process_images(images_carcinoma,224,224)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
     # dataloaders
-    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, 50)
+    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, 32)
 
     print("Configuring model...",end="\n\n")
     params = {
