@@ -10,27 +10,6 @@ import sys
 from glob import glob
 import fnmatch
 
-# def get_info():
-#     # model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
-#     model = "resnet50"
-#     date = input("Date:\n")
-#     version = input("Version:\n")
-#     sets = int(input("Set used:\n(1) First Set (2) Second Set (3) Both Sets\n"))
-#
-#     if sets is 1:
-#         positive_class = 1978
-#         negative_class = 398
-#     elif sets is 2:
-#         positive_class = 2405
-#         negative_class = 889
-#     elif sets is 3:
-#         positive_class = 1311
-#         negative_class = 4197
-#     else:
-#         sys.exit(-1)
-#
-#     return model, date, version, positive_class, negative_class
-
 def get_paths():
     PATH_y_pred = "./y_predict/y_predict_*"
     PATH_y_true = "./y_predict/y_test_*"
@@ -169,5 +148,5 @@ def get_stats():
 
 if __name__ == "__main__":
     stats, pos_neg = get_stats()
-    stats.to_csv("stats.csv")
-    pos_neg.to_csv("positive_negatives_stats.csv")
+    stats.to_csv("./stats/stats.csv")
+    pos_neg.to_csv("./stats/positive_negatives_stats.csv")
