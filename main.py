@@ -13,7 +13,7 @@ import train as tr
 import utils
 
 def get_arg(args):
-    if len(args) != 8:
+    if len(args) != 9:
         sys.exit(1)
 
     set_numb = int(sys.argv[1])
@@ -23,33 +23,20 @@ def get_arg(args):
     dp = float(sys.argv[5])
     version = int(sys.argv[6])
     server = sys.argv[7] 
+    hw = int(sys.argv[8])
     
     today = date.today()
     date_today = today.strftime("%d-%m-%y")
 
-    return set_numb, epochs, lr, model_name, dp, version, server, date_today
+    return set_numb, epochs, lr, model_name, dp, version, server, date_today, hw
 
-
-
-def get_info():
-    sets = int(input("(1) First set, (2) Second Set, (3) Both \n"))
-    epochs = int(input("Number of epochs:\n"))
-    lr = float(input("Learning rate:\n"))
-    dp = float(input("Dropout rate:\n"))
-    model_name = input("Model name:\nShould be 'resnet50', 'mobilenetv2' or 'inceptionv3'\n")
-    date_today = input("Date:\n")
-    version = int(input("Version:\n"))
-    server = (input("Server:\n"))
-
-    return sets, epochs, lr, dp, model_name, date_today, version, server
-
-def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton"):
+def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton", hw=224):
     # set_numb, epochs, lr, dp, model_name,  date_today, version, server = get_info()
     
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
-    x_normal = dt.process_images(images_normal,224,224)
-    x_carcinoma = dt.process_images(images_carcinoma,224,224)
+    x_normal = dt.process_images(images_normal,hw,hw)
+    x_carcinoma = dt.process_images(images_carcinoma,hw,hw)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
     # split
@@ -115,8 +102,8 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     utils.plot_accuracy_loss(epochs, model_name, losses=array_val_losses, accuracies=array_val_accuracies, date=date_today, version=version, training=False)
 
 if __name__ == "__main__":
+    print("Starting Program!")
     arg = sys.argv
-
-    set_numb, epochs, lr, model_name, dp, version, server, date_today = get_arg(arg)
-
-    main(date_today, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server)
+    set_numb, epochs, lr, model_name, dp, version, server, date_today, hw = get_arg(arg)
+    main(date_today, set_numb=set_numb, epochs=epochs, lr=lr, model_name=model_name.lower(), dp=dp, version=version, server=server, hw=hw)
+    print("Program ended!")
