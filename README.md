@@ -10,7 +10,7 @@ At first, we will be using the First Set, composed of 528 images in 100x magnifi
 
 + :o: ResNet50
 + :o: MobileNet_v2
-+ :0: Inception_v3
++ :o: Inception_v3
 
 ### Results
 
