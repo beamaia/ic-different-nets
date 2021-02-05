@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 def get_df(PATH):
     stats = pd.read_csv(PATH, sep=",")
@@ -33,11 +34,11 @@ def get_recall(summary):
 
     return mean, mins, maxs
 
-def plot_min_mean_max(values, version=1, set_num = 1, strs=["resnet50", "mobilenet-v2", "inception-v3"], bar_num=3, extra=""):
+def plot_min_mean_max(values, version=1, set_num = 1, ac=True, strs=["resnet50", "mobilenet-v2", "inception-v3"], bar_num=3, extra="", PATH="./stats/"):
     labels = ['Min', 'Mean', 'Max']
     x = np.arange(len(labels))  
     fig, ax = plt.subplots(figsize=(10, 5))
-    path = ""
+    path = PATH
    
     def subcategorybar(labels, values, x, strings, width=0.8):
         color=['springgreen', 'dodgerblue', 'mediumpurple']
@@ -67,14 +68,20 @@ def plot_min_mean_max(values, version=1, set_num = 1, strs=["resnet50", "mobilen
         set_string += " - " + extra
         path += extra.lower() + "_"
 
-    title = 'Min, Mean and Max Accuracy - ' + set_string
+    if ac:
+        add = "Accuracy"
+    else:
+        add = "Recall"
+        
+    title = 'Min, Mean and Max ' + add + " - "
+    title = title + set_string
     ax.set_ylabel('Percentage (%)')
     ax.set_title(title)
     ax.set_xticks(x)
     ax.set_xticklabels(labels)
     ax.legend(loc='upper right',  bbox_to_anchor=(1.20, 1))
 
-    if extra == "Recall":
+    if not ac:
         ax.set_ylim([0,1.1])
     else:
         ax.set_ylim([0,100])
@@ -93,11 +100,15 @@ def plot_min_mean_max(values, version=1, set_num = 1, strs=["resnet50", "mobilen
 
     fig.tight_layout()
 
-    path += "min_mean_max_set" + str(set_num) + "_version_" + str(version) + ".png"        
+    path += add.lower() + "_min_mean_max_set" + str(set_num) + "_version_" + str(version) + ".png"        
     plt.savefig(path, format="png", transparent=False, edgecolor="white")
 
 if __name__ == "__main__":
-    stats = get_df("stats.csv")
+    arg = sys.argv
+
+    PATH = arg[1] + "/stats/"
+    PATH_csv = PATH + "stats.csv"
+    stats = get_df(PATH_csv)
 
     stats_train80 = stats.loc[(stats["Day"] > 18)] 
     resnet_train70 = stats.loc[(stats["Day"] < 18)] 
@@ -150,22 +161,22 @@ if __name__ == "__main__":
     mobilenet_set3 = [min_mobilenet_set3, mean_mobilenet_set3, max_mobilenet_set3]
 
     values=[resnet_70_set1, resnet_80_set1]
-    plot_min_mean_max(values=values, version=1, extra="Resnet", set_num = 1, strs=["70% train", "80% train"], bar_num=2)
+    plot_min_mean_max(values=values, version=1, extra="Resnet", set_num = 1, strs=["70% train", "80% train"], bar_num=2, PATH=PATH)
 
     values=[resnet_70_set2, resnet_80_set2]
-    plot_min_mean_max(values=values, version=2, extra="Resnet", set_num = 2, strs=["70% train", "80% train"], bar_num=2)
+    plot_min_mean_max(values=values, version=2, extra="Resnet", set_num = 2, strs=["70% train", "80% train"], bar_num=2, PATH=PATH)
 
     values=[resnet_70_set3, resnet_80_set3]
-    plot_min_mean_max(values=values, version=3, extra="Resnet", set_num = 3, strs=["70% train", "80% train"], bar_num=2)
+    plot_min_mean_max(values=values, version=3, extra="Resnet", set_num = 3, strs=["70% train", "80% train"], bar_num=2, PATH=PATH)
 
     values=[resnet_80_set1, mobilenet_set1, inception_set1]
-    plot_min_mean_max(values=values, version=1,set_num = 1)
+    plot_min_mean_max(values=values, version=1,set_num = 1, PATH=PATH)
 
     values=[resnet_80_set2, mobilenet_set2, inception_set2]
-    plot_min_mean_max(values=values, version=2, set_num = 2)
+    plot_min_mean_max(values=values, version=2, set_num = 2, PATH=PATH)
 
     values=[resnet_80_set3, mobilenet_set3, inception_set3]
-    plot_min_mean_max(values=values, version=3,set_num = 3)
+    plot_min_mean_max(values=values, version=3,set_num = 3, PATH=PATH)
 
     # Resnet50 80% treino
     (mean_resnet_80_set1, min_resnet_80_set1, max_resnet_80_set1) = get_recall(summary_resnet_80_set1)
@@ -200,10 +211,10 @@ if __name__ == "__main__":
     mobilenet_set3 = [min_mobilenet_set3, mean_mobilenet_set3, max_mobilenet_set3]
 
     values=[resnet_80_set1, mobilenet_set1, inception_set1]
-    plot_min_mean_max(values=values, version=1,set_num = 1,extra="Recall")
+    plot_min_mean_max(values=values, version=1,set_num = 1, ac=False, PATH=PATH)
 
     values=[resnet_80_set2, mobilenet_set2, inception_set2]
-    plot_min_mean_max(values=values, version=2, set_num = 2, extra="Recall")
+    plot_min_mean_max(values=values, version=2, set_num = 2, ac=False, PATH=PATH)
 
     values=[resnet_80_set3, mobilenet_set3, inception_set3]
-    plot_min_mean_max(values=values, version=3,set_num = 3, extra="Recall")
+    plot_min_mean_max(values=values, version=3,set_num = 3, ac=False, PATH=PATH)
