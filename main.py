@@ -13,18 +13,37 @@ import train as tr
 import utils
 
 def get_arg(args):
-    if len(args) != 9:
-        sys.exit(1)
+    set_numb = 3
+    epochs = 200
+    lr = 0.0001
+    model_name = "resnet50"
+    dp = 0.5
+    version = 1
+    server = "hinton"
+    hw = 224
 
-    set_numb = int(sys.argv[1])
-    epochs = int(sys.argv[2])
-    lr = float(sys.argv[3])
-    model_name = sys.argv[4] 
-    dp = float(sys.argv[5])
-    version = int(sys.argv[6])
-    server = sys.argv[7] 
-    hw = int(sys.argv[8])
-    
+    for arg in args:
+        if arg == "main.py":
+            continue
+        
+        param, value = arg.split("=")
+        if param == "set":
+            set_numb = int(value)
+        elif param == "epoch":
+            epochs = int(value)
+        elif param == "lr":
+            lr = float(value)
+        elif param == "model":
+            model_name = value
+        elif param == "version":
+            version = int(value)
+        elif param == "server":
+            server = value
+        elif param == "resize":
+            hw = int(value)
+        elif param == "dp":
+            dp = float(value)
+
     today = date.today()
     date_today = today.strftime("%d-%m-%y")
 
