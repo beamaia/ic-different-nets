@@ -4,6 +4,8 @@ import torch.nn as nn
 
 import numpy as np
 from sklearn.utils.class_weight import compute_sample_weight
+from sklearn import metrics
+
 from os import system
 import sys
 from datetime import date
@@ -111,11 +113,20 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
 
     # test
     test_accuracy, y_predict = tr.test(model, test_loader)
+    
+    y_test_predict = []
+    for _, x in enumerate(y_predict):
+        for y in x:
+            y_test_predict.append(int(y))
+    y_test_predict = np.array(y_test_predict)
 
     print("Saving test data...")
 
-    utils.save_test_accuracy(test_accuracy, model_name, date_today, version, new=False, sets=set_numb) # change here
-    utils.save_y_true_predict(y_test, y_predict, model_name, date_today, version)
+    balanced_test_accuracy = metrics.balanced_accuracy_score(y_test, y_test_predict, sample_weight=test_sample_weights)
+    print("Balanced accuracy: ", balanced_test_accuracy)
+
+    utils.save_test_accuracy(test_accuracy, balanced_test_accuracy, model_name, date_today, version, new=False, sets=set_numb) # change here
+    utils.save_y_true_predict(y_test, y_test_predict, model_name, date_today, version)
 
     # Saving info
     utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date_today, model_name, version, training=True)

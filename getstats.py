@@ -10,9 +10,9 @@ import sys
 from glob import glob
 import fnmatch
 
-def get_paths():
-    PATH_y_pred = "./y_predict/y_predict_*"
-    PATH_y_true = "./y_predict/y_test_*"
+def get_paths(PATH):
+    PATH_y_pred = PATH + "/y_predict/y_predict_*"
+    PATH_y_true = PATH + "/y_predict/y_test_*"
 
     pred = glob(PATH_y_pred)
     true = glob(PATH_y_true)
@@ -23,7 +23,12 @@ def get_paths():
 
     return pred, true
 
-def get_info(pred_path, true_path):
+def get_info(pred_path, true_path, PATH):
+
+    if PATH != ".":
+        pred_path = pred_path.replace(PATH, ".")
+        true_path = true_path.replace(PATH, ".")
+
     _, _, pred_string = pred_path.split("/")
     _, _, true_string = true_path.split("/")
     pred_string, _ = pred_string.split(".")
@@ -56,11 +61,12 @@ def get_accuracy(df, model, date, version):
         return same_everything["Accuracy"].values[0], same_everything["Set"].values[0]
 
 
-def get_stats():
+def get_stats(PATH):
     # model, date, version, positive_class, negative_class = get_info()
-    df_accuracies = pd.read_csv("./test_accuracies/accuracies.csv")
+    PATH_accuracies = PATH+"/test_accuracies/accuracies.csv"
+    df_accuracies = pd.read_csv(PATH_accuracies, index_col=False)
 
-    pred, true = get_paths()    
+    pred, true = get_paths(PATH)    
     pred.sort(), true.sort()
     
     models = []
@@ -75,10 +81,11 @@ def get_stats():
     f1_scores = []
     # auc_scores = []
     accuracies = []
+    b_accuracies = []
     sets = []
 
     for pred_path, true_path in zip(pred, true):
-        model, date, version = get_info(pred_path, true_path)
+        model, date, version = get_info(pred_path, true_path, PATH)
         accuracy, set_used = get_accuracy(df_accuracies, model, date, version)
 
         models.append(model)
@@ -90,6 +97,12 @@ def get_stats():
         y_pred = np.loadtxt(pred_path)
         y_true = np.loadtxt(true_path)
 
+        unique, counts = np.unique(y_true, return_counts=True)
+        class_weight = dict(zip(unique, counts))
+        test_sample_weights = compute_sample_weight(class_weight, y_true)
+        balanced_test_accuracy = metrics.balanced_accuracy_score(y_true, y_pred, sample_weight=test_sample_weights)
+
+        b_accuracies.append(balanced_test_accuracy)
         # y_true1 = np.count_nonzero(y_true)
         # y_true0 = len(y_true) - y_true1
         # weights = compute_sample_weight({1:y_true1, 0: y_true0}, y_true)
@@ -121,6 +134,7 @@ def get_stats():
     f1_scores = np.array(f1_scores)
     # auc_scores = np.array(auc_scores)
     accuracies = np.array(accuracies)
+    b_accuracies = np.array(b_accuracies)
     sets = np.array(sets)
 
     dict_stats = {"Model": models, 
@@ -128,6 +142,7 @@ def get_stats():
              "Version": versions,
              "Set": sets,
              "Accuracy": accuracies, 
+             "Balanced accuracy": b_accuracies,
              "Precision": precisions,
              "Recall": recalls,
              "F1": f1_scores}
@@ -147,6 +162,12 @@ def get_stats():
     return stats, pos_neg
 
 if __name__ == "__main__":
-    stats, pos_neg = get_stats()
-    stats.to_csv("./stats/stats.csv")
-    pos_neg.to_csv("./stats/positive_negatives_stats.csv")
+    args = sys.argv
+    PATH = args[1]
+
+    stats, pos_neg = get_stats(PATH)
+
+    PATH_stats = PATH + "/stats/stats.csv"
+    PATH_pos_neg = PATH + "/stats/positive_negatives_stats.csv"
+    stats.to_csv(PATH_stats, index=False)
+    pos_neg.to_csv(PATH_pos_neg, index=False)
