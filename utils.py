@@ -82,11 +82,11 @@ def calculate_true_false_results (y_test, y_predict):
 
     return df_amount, df_percentage, masks
 
-def save_y_true_predict (y_test, y_test_predict, model_name, date, version=1):
-    y_predict = []
-    for _, x in enumerate(y_test_predict):
-        for y in x:
-            y_predict.append(int(y)) 
+def save_y_true_predict (y_test, y_predict, model_name, date, version=1):
+    # y_predict = []
+    # for _, x in enumerate(y_test_predict):
+    #     for y in x:
+    #         y_predict.append(int(y)) 
 
     PATH = str(model_name) + "_" + str(date) + "_" + str(version)
     PATH_yt = "./y_predict/y_test_" + PATH + ".txt"
@@ -95,11 +95,11 @@ def save_y_true_predict (y_test, y_test_predict, model_name, date, version=1):
     np.savetxt(PATH_yp, y_predict, delimiter=",")
     np.savetxt(PATH_yt,y_test, delimiter=",")
 
-def save_dataframes (y_test, y_test_predict, model_name, date, version=1):
-    y_predict = []
-    for _, x in enumerate(y_test_predict):
-        for y in x:
-            y_predict.append(int(y))
+def save_dataframes (y_test, y_predict, model_name, date, version=1):
+    # y_predict = []
+    # for _, x in enumerate(y_test_predict):
+    #     for y in x:
+    #         y_predict.append(int(y))
 
     df_amount, df_percentage, masks = calculate_true_false_results(y_test, y_predict)
 
@@ -118,16 +118,16 @@ def save_dataframes (y_test, y_test_predict, model_name, date, version=1):
     np.savetxt(PATH_yt,y_test, delimiter=",")
 
 
-def save_test_accuracy (test_accuracy, model_name, date, version=1, new=False, sets=1):
+def save_test_accuracy (test_accuracy, balanced_test_accuracy, model_name, date, version=1, new=False, sets=1):
     PATH = "./test_accuracies/accuracies.csv"
     # test_accuracy = str(test_accuracy)
     # version = str(version)
-    df = pd.DataFrame({'Model': [model_name],'Accuracy': [test_accuracy], 'Date': [date], 'Version':[version], 'Set': [sets]})
+    df = pd.DataFrame({'Model': [model_name],'Accuracy': [test_accuracy], 'Balanced Accuracy': balanced_test_accuracy, 'Date': [date], 'Version':[version], 'Set': [sets]})
 
     if not new:
-        df_origin = pd.read_csv(PATH, index_col=0)
+        df_origin = pd.read_csv(PATH, index_col=False)
         df = df_origin.append(df)
-        df.to_csv(PATH)
+        df.to_csv(PATH, index=False)
     else:
         df.to_csv(PATH)
 
