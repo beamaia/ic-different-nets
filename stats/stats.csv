@@ -1,0 +1,2 @@
+Model,Date,Version,Set,Accuracy,Balanced accuracy,Precision,Recall,F1
+resnet50,05-02-21,1,1,90.56603773584905,0.5,0.7735849056603774,1.0,0.8723404255319149

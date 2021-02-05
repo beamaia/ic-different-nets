@@ -1,0 +1,2 @@
+Model,Date,Version,Set,True Positive,False Negatives,False Positives,True Negatives
+resnet50,05-02-21,1,1,41,0,12,0
