@@ -1,5 +1,5 @@
 import torch
-from torch.utils.data import Dataset, DataLoader
+from torch.utils.data import Dataset, DataLoader, WeightedRandomSampler
 import torchvision.transforms as transforms
 
 from glob import glob
@@ -88,11 +88,6 @@ def create_images_labels(x_normal, x_carcinoma, patch_size=30, max_patches=30):
     # images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
     images = np.concatenate((x_carcinoma, x_normal), axis=0)
 
-    # in order to tweak inception
-    print(images.shape)
-    # print(patches_normal.shape)
-    # print(patches_carcinoma.shape)
-
     # labels_nr = np.zeros(len(patches_normal))
     # labels_ca = np.ones(len(patches_carcinoma))
     # labels = np.concatenate((labels_nr, labels_ca))
@@ -100,11 +95,6 @@ def create_images_labels(x_normal, x_carcinoma, patch_size=30, max_patches=30):
     labels_nr = np.zeros(len(x_normal))
     labels_ca = np.ones(len(x_carcinoma))
     labels = np.concatenate((labels_nr, labels_ca))
-
-    # in order to tweak inception
-    print(labels.shape)
-    print(labels_nr.shape)
-    print(labels_ca.shape)
 
     images = torch.from_numpy(images)
     labels = torch.Tensor(labels) 
@@ -136,15 +126,20 @@ class DatasetOral(torch.utils.data.Dataset):
     def __getitem__(self, index):
         return self.images[index], self.labels[index]
 
-def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_size=64, shuffle=True, num_workers=2):
+def create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, batch_size=64, shuffle=True, num_workers=2):
     print("Creating dataloaders...", end='\n\n')
     params = {'batch_size': batch_size,
-              'shuffle': shuffle,
               'num_workers': num_workers}
 
     x_train /=255.
     x_val /=255.
     x_test /= 255.
+
+    print("Creating samplers...")
+    
+    train_sampler = WeightedRandomSampler(train_sample_weights, len(train_sample_weights))
+    val_sampler = WeightedRandomSampler(val_sample_weights, len(val_sample_weights))
+    test_sampler = WeightedRandomSampler(test_sample_weights, len(test_sample_weights))
 
     w, h = x_train.shape[1], x_train.shape[2]
     x_train = x_train.reshape(-1, 3, w, h)
@@ -154,13 +149,13 @@ def create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, batch_siz
     # print(x_train.shape, x_val.shape, x_test.shape, sep="\n")
 
     train_set = DatasetOral(x_train, y_train)
-    train_loader = DataLoader(train_set, **params)
+    train_loader = DataLoader(train_set, sampler=train_sampler, **params)
 
     val_set = DatasetOral(x_val, y_val)
-    val_loader = DataLoader(val_set, **params)
+    val_loader = DataLoader(val_set, sampler=val_sampler, **params)
 
     test_set = DatasetOral(x_test, y_test)
-    test_loader = DataLoader(test_set, **params)
+    test_loader = DataLoader(test_set, sampler=test_sampler, **params)
 
     return train_loader, val_loader, test_loader
 

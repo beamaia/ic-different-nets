@@ -3,7 +3,7 @@ from torchvision import models
 import torch.nn as nn
 
 import numpy as np
-
+from sklearn.utils.class_weight import compute_sample_weight
 from os import system
 import sys
 from datetime import date
@@ -51,18 +51,24 @@ def get_arg(args):
 
 def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", dp=0.5, version=1, server="hinton", hw=224):
     # set_numb, epochs, lr, dp, model_name,  date_today, version, server = get_info()
-    
+
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
     x_normal = dt.process_images(images_normal,hw,hw)
     x_carcinoma = dt.process_images(images_carcinoma,hw,hw)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
+    normal_len, carcinoma_len = len(x_normal), len(x_carcinoma)
+    weight_dic = {0: normal_len, 1:carcinoma_len}
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
+    train_sample_weights = compute_sample_weight(weight_dic, y_train)
+    val_sample_weights = compute_sample_weight(weight_dic, y_val)
+    test_sample_weights = compute_sample_weight(weight_dic, y_test)
+
     # dataloaders
-    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_test, y_test, x_val, y_val, 32)
+    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, 32)
 
     print("Configuring model...",end="\n\n")
     params = {
