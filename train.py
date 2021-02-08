@@ -9,14 +9,15 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import utils
 
-def train (model, model_name, train_loader, val_loader, num_epochs, lr):
+def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr):
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
-    print(f"Device: {device}",end="\n\n")
-    is_inception = model_name.lower() == "inceptionv3"
+    weights.to(device)
 
-    criterion = nn.CrossEntropyLoss() #Loss function
+    print(f"Device: {device}",end="\n\n")
+
+    criterion = nn.CrossEntropyLoss(weight=weights, reduction='none') #Loss function
     optimizer = optim.Adam(model.parameters(), lr=lr)
     train_accuracies = []
     train_losses = []
@@ -53,6 +54,10 @@ def train (model, model_name, train_loader, val_loader, num_epochs, lr):
             outputs = model(images)
 
             #Backward
+            print(labels.detach().numpy().shape)
+            print(outputs.detach().numpy().shape)
+            print(weights.detach().numpy().shape)
+
             loss = criterion(outputs, labels).to(device)
             loss.backward()
 

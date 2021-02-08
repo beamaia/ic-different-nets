@@ -14,6 +14,13 @@ import data as dt
 import train as tr
 import utils
 
+def sum_unique (x):
+    unique = np.unique(x)
+    sums = 0
+    for _, val in enumerate(unique):
+        sums += val    
+    return sums, unique
+
 def get_arg(args):
     set_numb = 3
     epochs = 200
@@ -29,21 +36,21 @@ def get_arg(args):
             continue
         
         param, value = arg.split("=")
-        if param == "set":
+        if param == "set" or param == "set_num":
             set_numb = int(value)
-        elif param == "epoch":
+        elif param == "epoch" or param == "epochs" or param == "num_epochs":
             epochs = int(value)
-        elif param == "lr":
+        elif param == "lr" or param == "learning_rate":
             lr = float(value)
-        elif param == "model":
+        elif param == "model" or param == "model_name":
             model_name = value
         elif param == "version":
             version = int(value)
         elif param == "server":
             server = value
-        elif param == "resize":
+        elif param == "resize" or param == "size" or param == "height_weight":
             hw = int(value)
-        elif param == "dp":
+        elif param == "dp" or param == "dropout":
             dp = float(value)
 
     today = date.today()
@@ -68,6 +75,15 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     train_sample_weights = compute_sample_weight(weight_dic, y_train)
     val_sample_weights = compute_sample_weight(weight_dic, y_val)
     test_sample_weights = compute_sample_weight(weight_dic, y_test)
+
+    train_sum_weights, weights = sum_unique(train_sample_weights)
+
+    train_sample_weights /= train_sum_weights
+    val_sample_weights /= val_sample_weights
+    test_sample_weights /= test_sample_weights
+    print(weights/train_sum_weights)
+
+    weights = torch.FloatTensor(weights/train_sum_weights)
 
     # dataloaders
     train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, 32)
@@ -97,9 +113,8 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
         print("Model not identified")
         sys.exit(1)
 
-
     # train
-    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, model_name, train_loader, val_loader, **params)
+    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, model_name, train_loader, val_loader, weights, **params)
 
     print("Saving training data...", end="\n\n")
     
