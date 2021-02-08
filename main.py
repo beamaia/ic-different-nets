@@ -83,7 +83,9 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     test_sample_weights /= test_sample_weights
     print(weights/train_sum_weights)
 
+    weights = np.reshape(weights, (2,1))
     weights = torch.FloatTensor(weights/train_sum_weights)
+    print(weights.size())
 
     # dataloaders
     train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, 32)

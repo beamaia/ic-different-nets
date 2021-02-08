@@ -30,7 +30,7 @@ def image_paths(set_num=1, server="bea"):
     elif hinton:
         PATH_ini = "/home/hinton/Desktop/Humberto/"
     elif turing:
-        PATH_ini = "./data/oralCancer-Borooah/"
+        PATH_ini = ".././oralCancer-Borooah/"
     else:
         print("Server not identified")
         sys.exit(1)

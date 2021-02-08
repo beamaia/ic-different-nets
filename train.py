@@ -13,7 +13,8 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
-    weights.to(device)
+    weights = weights.to(device)
+    print(weights)
 
     print(f"Device: {device}",end="\n\n")
 
@@ -39,7 +40,8 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             images, labels = data[0].to(device), data[1].to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
-
+            print(labels.size())
+            print(images.size())
             # if is_inception:
             #     #Forward
             #     # outputs, aux_outputs = model(images)
@@ -52,11 +54,12 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             # else:
             #Forward
             outputs = model(images)
+            print(outputs.size())
 
             #Backward
-            print(labels.detach().numpy().shape)
-            print(outputs.detach().numpy().shape)
-            print(weights.detach().numpy().shape)
+            # print(labels.detach().numpy().shape)
+            # print(outputs.detach().numpy().shape)
+            # print(weights.detach().numpy().shape)
 
             loss = criterion(outputs, labels).to(device)
             loss.backward()
