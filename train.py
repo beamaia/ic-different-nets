@@ -13,7 +13,6 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
-    weights = weights.to(device)
     print(weights)
 
     print(f"Device: {device}",end="\n\n")
@@ -41,6 +40,7 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             # Zero the parameter gradients
             optimizer.zero_grad()
             print(labels.size())
+            print(labels)
             print(images.size())
             # if is_inception:
             #     #Forward
