@@ -14,7 +14,8 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
     print(weights)
-
+    weights = torch.from_numpy(weights)
+    weights = weights.float().to(device)
     print(f"Device: {device}",end="\n\n")
 
     criterion = nn.CrossEntropyLoss() #Loss function
@@ -39,9 +40,9 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             images, labels = data[0].to(device), data[1].to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
-            print(labels.size())
-            print(labels)
-            print(images.size())
+            # print(labels.size())
+            # print(labels)
+            # print(images.size())
             # if is_inception:
             #     #Forward
             #     # outputs, aux_outputs = model(images)
@@ -54,7 +55,7 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             # else:
             #Forward
             outputs = model(images)
-            print(outputs.size())
+            # print(outputs.size())
 
             #Backward
             # print(labels.detach().numpy().shape)
