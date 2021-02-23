@@ -17,7 +17,7 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
 
     print(f"Device: {device}",end="\n\n")
 
-    criterion = nn.CrossEntropyLoss(weight=weights, reduction='none') #Loss function
+    criterion = nn.CrossEntropyLoss() #Loss function
     optimizer = optim.Adam(model.parameters(), lr=lr)
     train_accuracies = []
     train_losses = []
@@ -61,7 +61,7 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             # print(outputs.detach().numpy().shape)
             # print(weights.detach().numpy().shape)
 
-            loss = criterion(outputs, labels).to(device)
+            loss = criterion(outputs, labels).to(device) + 
             loss.backward()
 
             #Optimize

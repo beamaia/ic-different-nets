@@ -68,11 +68,12 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     images, labels = dt.create_images_labels(x_normal, x_carcinoma)
 
     normal_len, carcinoma_len = len(x_normal), len(x_carcinoma)
-    weight_dic = {0: normal_len, 1:carcinoma_len}
+    weight_dic = {0: carcinoma_len, 1:normal_len}
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
     train_sample_weights = compute_sample_weight(weight_dic, y_train)
+    print(np.unique(compute_sample_weight))
     val_sample_weights = compute_sample_weight(weight_dic, y_val)
     test_sample_weights = compute_sample_weight(weight_dic, y_test)
 
