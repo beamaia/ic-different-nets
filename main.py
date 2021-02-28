@@ -63,9 +63,9 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
 
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
-    x_normal = dt.process_images(images_normal,hw,hw)
+    x_normal = dt.process_images(images_normal)
     x_carcinoma = dt.process_images(images_carcinoma,hw,hw)
-    images, labels = dt.create_images_labels(x_normal, x_carcinoma)
+    images, labels = dt.create_images_labels(x_normal, x_carcinoma, patch_size=hw)
 
     normal_len, carcinoma_len = len(x_normal), len(x_carcinoma)
     weight_dic = {0: carcinoma_len, 1:normal_len}

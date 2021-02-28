@@ -13,7 +13,6 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
-    print(weights)
     weights = torch.from_numpy(weights)
     weights = weights.float().to(device)
     print(f"Device: {device}",end="\n\n")
@@ -40,29 +39,11 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             images, labels = data[0].to(device), data[1].to(device)
             # Zero the parameter gradients
             optimizer.zero_grad()
-            # print(labels.size())
-            # print(labels)
-            # print(images.size())
-            # if is_inception:
-            #     #Forward
-            #     # outputs, aux_outputs = model(images)
-            #     outputs = model(images)
 
-            #     #Backward
-            #     loss1 = criterion(outputs, labels)
-            #     loss2 = criterion(aux_outputs, labels)
-            #     loss = loss1 + 0.4*loss2
-            # else:
             #Forward
             outputs = model(images)
-            # print(outputs.size())
 
-            #Backward
-            # print(labels.detach().numpy().shape)
-            # print(outputs.detach().numpy().shape)
-            # print(weights.detach().numpy().shape)
-
-            loss = criterion(outputs, labels).to(device) + 
+            loss = criterion(outputs, labels).to(device) 
             loss.backward()
 
             #Optimize
@@ -95,12 +76,6 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
                 # images, labels = data[0], data[1]
                 images, labels = images.to(device), labels.to(device)
 
-                # if is_inception:
-                #     outputs, aux_outputs = model(images)
-                #     val_loss1 = criterion(outputs, labels)
-                #     val_loss2 = criterion(aux_outputs, labels)
-                #     val_loss = val_loss1 + 0.4*val_loss2
-                # else:
                 outputs = model(images)
                 val_loss = criterion(outputs, labels)
 

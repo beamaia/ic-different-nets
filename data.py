@@ -63,7 +63,7 @@ def image_paths(set_num=1, server="bea"):
         sys.exit(1)
     return images_normal, images_carcinoma
 
-def process_images(images, height=250, width=250):
+def process_images(images, height=1536, width=2048):
     print("Processing images...", end="\n\n")
     
     pros_images = []
@@ -78,22 +78,22 @@ def process_images(images, height=250, width=250):
 
     return pros_images
 
-def create_images_labels(x_normal, x_carcinoma, patch_size=30, max_patches=30):
+def create_images_labels(x_normal, x_carcinoma, patch_size=224, max_patches=30):
 
     print("Creating patches...")
     
-    # pe = PatchExtractor(patch_size = (patch_size, patch_size), max_patches = max_patches)
-    # patches_normal = pe.transform(x_normal)
-    # patches_carcinoma = pe.transform(x_carcinoma)
-    # images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
-    images = np.concatenate((x_carcinoma, x_normal), axis=0)
+    pe = PatchExtractor(patch_size = (patch_size, patch_size), max_patches = max_patches)
+    patches_normal = pe.transform(x_normal)
+    patches_carcinoma = pe.transform(x_carcinoma)
+    images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
+    # images = np.concatenate((x_carcinoma, x_normal), axis=0)
 
     # labels_nr = np.zeros(len(patches_normal))
     # labels_ca = np.ones(len(patches_carcinoma))
     # labels = np.concatenate((labels_nr, labels_ca))
 
-    labels_nr = np.zeros(len(x_normal))
-    labels_ca = np.ones(len(x_carcinoma))
+    labels_nr = np.zeros(len(patches_normal))
+    labels_ca = np.ones(len(patches_carcinoma))
     labels = np.concatenate((labels_nr, labels_ca))
 
     images = torch.from_numpy(images)
