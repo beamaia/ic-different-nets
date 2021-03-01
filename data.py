@@ -139,7 +139,7 @@ def create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sam
     
     train_sampler = WeightedRandomSampler(train_sample_weights, len(train_sample_weights))
     val_sampler = WeightedRandomSampler(val_sample_weights, len(val_sample_weights))
-    test_sampler = WeightedRandomSampler(test_sample_weights, len(test_sample_weights))
+    # test_sampler = WeightedRandomSampler(test_sample_weights, len(test_sample_weights))
 
     w, h = x_train.shape[1], x_train.shape[2]
     x_train = x_train.reshape(-1, 3, w, h)
@@ -155,7 +155,7 @@ def create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sam
     val_loader = DataLoader(val_set, sampler=val_sampler, **params)
 
     test_set = DatasetOral(x_test, y_test)
-    test_loader = DataLoader(test_set, sampler=test_sampler, **params)
+    test_loader = DataLoader(test_set, **params)
 
     return train_loader, val_loader, test_loader
 

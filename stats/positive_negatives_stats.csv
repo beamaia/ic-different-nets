@@ -1,4 +1,5 @@
 Model,Date,Version,Set,True Positive,False Negatives,False Positives,True Negatives
-resnet50,05-02-21,1,1,41,0,12,0
-resnet50,05-02-21,2,2,39,6,24,1
-resnet50,05-02-21,3,3,61,33,24,5
+resnet50,01-03-21,2,1,49,0,0,262
+resnet50,01-03-21,3,1,44,0,0,267
+resnet50,01-03-21,4,2,43,0,0,610
+resnet50,01-03-21,5,3,94,0,0,870
