@@ -9,12 +9,13 @@ from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import utils
 
+from sklearn import metrics
+
 def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr):
     print("Starting training...")
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model.to(device)
-    weights = torch.from_numpy(weights)
-    weights = weights.float().to(device)
+    # weights = weights.to(device)
     print(f"Device: {device}",end="\n\n")
 
     criterion = nn.CrossEntropyLoss() #Loss function
@@ -56,7 +57,9 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             y_predict_loader.append(predicted)
             total_train += labels.size(0)
             accuracies_train += (predicted == labels).sum().item()
-        
+            # accuracy_sk = metrics.accuracy_score(labels.cpu().detach().numpy(), predicted.cpu().detach().numpy())
+            # print(accuracy_sk)
+
         accuracy = accuracies_train / total_train * 100
         train_losses.append(np.mean(running_loss)) 
         train_accuracies.append(accuracy)
@@ -83,6 +86,7 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
                 total_val += labels.size(0)
                 _, predicted = torch.max(outputs, 1)
                 accuracies_val += (predicted == labels).sum().item()
+                
         
         accuracy_val = accuracies_val / total_val * 100
 
@@ -104,18 +108,22 @@ def test(model, test_loader):
     model.eval()
 
     y_predict = []
+    y_true = []
     accuracy = 0
     with torch.no_grad():
         total = 0
         for _, data in enumerate(test_loader):
             images, labels = data[0].to(device), data[1].to(device)
+            y_true.append(labels)
             outputs = model(images)
             _, predicted = torch.max(outputs, 1)
             y_predict.append(predicted)
             total += labels.size(0)
             accuracy += (predicted == labels).sum().item()
+            accuracy_sk = metrics.accuracy_score(labels.cpu().detach().numpy(), predicted.cpu().detach().numpy())
+            print(accuracy_sk)
 
     accuracy_test = accuracy / total * 100
     print(f"Accuracy: {accuracy_test}")
     print("Finished test....")
-    return accuracy_test, y_predict
+    return accuracy_test, y_predict, y_true

@@ -86,16 +86,16 @@ def get_stats(PATH):
 
     for pred_path, true_path in zip(pred, true):
         model, date, version = get_info(pred_path, true_path, PATH)
-        accuracy, set_used = get_accuracy(df_accuracies, model, date, version)
-
+        _, set_used = get_accuracy(df_accuracies, model, date, version)
         models.append(model)
         dates.append(date)
         versions.append(version)
-        accuracies.append(float(accuracy))
         sets.append(set_used)
 
         y_pred = np.loadtxt(pred_path)
         y_true = np.loadtxt(true_path)
+        accuracy = metrics.accuracy_score(y_true, y_pred)
+        accuracies.append(float(accuracy)*100)
 
         unique, counts = np.unique(y_true, return_counts=True)
         class_weight = dict(zip(unique, counts))

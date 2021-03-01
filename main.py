@@ -68,7 +68,11 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     images, labels = dt.create_images_labels(x_normal, x_carcinoma, patch_size=hw)
 
     normal_len, carcinoma_len = len(x_normal), len(x_carcinoma)
-    weight_dic = {0: carcinoma_len, 1:normal_len}
+    total = normal_len + carcinoma_len
+    normal_ratio, carcinoma_ratio = normal_len/total, carcinoma_len/total
+    
+    weight_tensor = torch.tensor([carcinoma_ratio, normal_ratio])
+    weight_dic = {0: carcinoma_ratio, 1: normal_ratio}
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
@@ -118,7 +122,7 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
         sys.exit(1)
 
     # train
-    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, model_name, train_loader, val_loader, weights, **params)
+    train_accuracies, train_losses, val_accuracies, val_losses, y_predict = tr.train(model, model_name, train_loader, val_loader, weight_tensor, **params)
 
     print("Saving training data...", end="\n\n")
     
@@ -131,21 +135,28 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     # save_model_dict (model, model_name,  date_today, version)
 
     # test
-    test_accuracy, y_predict = tr.test(model, test_loader)
+    test_accuracy, y_predict, y_true = tr.test(model, test_loader)
     
     y_test_predict = []
+    y_test_true = []
     for _, x in enumerate(y_predict):
         for y in x:
             y_test_predict.append(int(y))
+            
+    for _, x in enumerate(y_true):
+        for y in x:
+            y_test_true.append(int(y))
+
     y_test_predict = np.array(y_test_predict)
+    y_test_true = np.array(y_test_true)
 
     print("Saving test data...")
 
-    balanced_test_accuracy = metrics.balanced_accuracy_score(y_test, y_test_predict, sample_weight=test_sample_weights)
+    balanced_test_accuracy = metrics.balanced_accuracy_score(y_test_true, y_test_predict, sample_weight=test_sample_weights)
     print("Balanced accuracy: ", balanced_test_accuracy)
 
     utils.save_test_accuracy(test_accuracy, balanced_test_accuracy, model_name, date_today, version, new=False, sets=set_numb) # change here
-    utils.save_y_true_predict(y_test, y_test_predict, model_name, date_today, version)
+    utils.save_y_true_predict(y_test_true, y_test_predict, model_name, date_today, version)
 
     # Saving info
     utils.save_txt_accuracy_loss(array_train_accuracies, array_train_losses, date_today, model_name, version, training=True)
