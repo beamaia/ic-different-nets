@@ -64,7 +64,7 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     # images    
     images_normal, images_carcinoma = dt.image_paths(set_numb, server)
     x_normal = dt.process_images(images_normal)
-    x_carcinoma = dt.process_images(images_carcinoma,hw,hw)
+    x_carcinoma = dt.process_images(images_carcinoma)
     images, labels = dt.create_images_labels(x_normal, x_carcinoma, patch_size=hw)
 
     normal_len, carcinoma_len = len(x_normal), len(x_carcinoma)
@@ -76,24 +76,12 @@ def main(date_today, set_numb=1, epochs=200, lr=0.0001, model_name="resnet50", d
     # split
     (x_train, y_train), (x_val, y_val), (x_test, y_test) = dt.create_train_test(images, labels, 0.2)
 
-    train_sample_weights = compute_sample_weight(weight_dic, y_train)
-    print(np.unique(compute_sample_weight))
-    val_sample_weights = compute_sample_weight(weight_dic, y_val)
-    test_sample_weights = compute_sample_weight(weight_dic, y_test)
-
-    train_sum_weights, weights = sum_unique(train_sample_weights)
-
-    train_sample_weights /= train_sum_weights
-    val_sample_weights /= val_sample_weights
-    test_sample_weights /= test_sample_weights
-    weights /= train_sum_weights
-
-    # weights = np.reshape(weights, (2,1))
-    # weights = torch.FloatTensor(weights/train_sum_weights)
-    # print(weights.size())
+    train_sample_weights = compute_sample_weight(weight_dic, y_train) / (len(y_test) + len(y_train) + len(y_val))
+    val_sample_weights = compute_sample_weight(weight_dic, y_val) / (len(y_test) + len(y_train) + len(y_val))
+    test_sample_weights = compute_sample_weight(weight_dic, y_test) / (len(y_test) + len(y_train) + len(y_val))
 
     # dataloaders
-    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, 32)
+    train_loader, val_loader, test_loader = dt.create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sample_weights, val_sample_weights, test_sample_weights, batch_size=32)
 
     print("Configuring model...",end="\n\n")
     params = {

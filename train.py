@@ -57,8 +57,6 @@ def train (model, model_name, train_loader, val_loader, weights, num_epochs, lr)
             y_predict_loader.append(predicted)
             total_train += labels.size(0)
             accuracies_train += (predicted == labels).sum().item()
-            # accuracy_sk = metrics.accuracy_score(labels.cpu().detach().numpy(), predicted.cpu().detach().numpy())
-            # print(accuracy_sk)
 
         accuracy = accuracies_train / total_train * 100
         train_losses.append(np.mean(running_loss)) 
@@ -120,8 +118,6 @@ def test(model, test_loader):
             y_predict.append(predicted)
             total += labels.size(0)
             accuracy += (predicted == labels).sum().item()
-            accuracy_sk = metrics.accuracy_score(labels.cpu().detach().numpy(), predicted.cpu().detach().numpy())
-            print(accuracy_sk)
 
     accuracy_test = accuracy / total * 100
     print(f"Accuracy: {accuracy_test}")

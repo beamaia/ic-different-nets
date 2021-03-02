@@ -54,6 +54,7 @@ def get_accuracy(df, model, date, version):
     index_size = len(same_everything.index)
 
     if index_size is not 1:
+        print(same_everything)
         print(f"Got {index_size} instead of 1")
         print(same_everything)
         sys.exit(-1)

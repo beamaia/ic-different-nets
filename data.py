@@ -86,15 +86,16 @@ def create_images_labels(x_normal, x_carcinoma, patch_size=224, max_patches=30):
     patches_normal = pe.transform(x_normal)
     patches_carcinoma = pe.transform(x_carcinoma)
     images = np.concatenate((patches_normal, patches_carcinoma), axis = 0)
-    # images = np.concatenate((x_carcinoma, x_normal), axis=0)
-
-    # labels_nr = np.zeros(len(patches_normal))
-    # labels_ca = np.ones(len(patches_carcinoma))
-    # labels = np.concatenate((labels_nr, labels_ca))
 
     labels_nr = np.zeros(len(patches_normal))
     labels_ca = np.ones(len(patches_carcinoma))
     labels = np.concatenate((labels_nr, labels_ca))
+
+    # images = np.concatenate((x_normal, x_carcinoma), axis=0)
+
+    # labels_nr = np.zeros(len(x_normal))
+    # labels_ca = np.ones(len(x_carcinoma))
+    # labels = np.concatenate((labels_nr, labels_ca))
 
     images = torch.from_numpy(images)
     labels = torch.Tensor(labels) 
@@ -108,8 +109,8 @@ def create_images_labels(x_normal, x_carcinoma, patch_size=224, max_patches=30):
 def create_train_test(images, labels, test_size):
     print("Creating train, validation and test images...", end="\n\n")
 
-    x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=test_size, random_state=42)
-    x_val, x_test, y_val, y_test = train_test_split(x_test, y_test, test_size =0.5, random_state=42)
+    x_train, x_test, y_train, y_test = train_test_split(images, labels, test_size=test_size, random_state=11)
+    x_val, x_test, y_val, y_test = train_test_split(x_test, y_test, test_size =0.5, random_state=11)
 
     return (x_train, y_train), (x_val, y_val), (x_test, y_test)
 
@@ -138,7 +139,7 @@ def create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sam
     print("Creating samplers...")
     
     train_sampler = WeightedRandomSampler(train_sample_weights, len(train_sample_weights))
-    val_sampler = WeightedRandomSampler(val_sample_weights, len(val_sample_weights))
+    # val_sampler = WeightedRandomSampler(val_sample_weights, len(val_sample_weights))
     # test_sampler = WeightedRandomSampler(test_sample_weights, len(test_sample_weights))
 
     w, h = x_train.shape[1], x_train.shape[2]
@@ -152,7 +153,7 @@ def create_dataloaders(x_train, y_train, x_val, y_val, x_test, y_test, train_sam
     train_loader = DataLoader(train_set, sampler=train_sampler, **params)
 
     val_set = DatasetOral(x_val, y_val)
-    val_loader = DataLoader(val_set, sampler=val_sampler, **params)
+    val_loader = DataLoader(val_set, **params)
 
     test_set = DatasetOral(x_test, y_test)
     test_loader = DataLoader(test_set, **params)
